@@ -1,20 +1,72 @@
 ------------------------------------------------------------
-Version 1.10.3
-    - Fixed issue where post wasn't getting created when option to "only create post when payment is received" was active and payment total was $0.00
+Version 2.3.1
+	- Updated database upgrade routine to remove redundant code that ensured feeds were copied over. Root of the issue was fixed in Gravity Forms core.
 
 ------------------------------------------------------------
-Version 1.10.2
-	- Fixed notices when using coupons
-	
+Version 2.3
+	- Added Spanish translation file.
+	- Updated strings that were not able to be translated.
+	- Updated POT file.
+	- Fixed a fatal error introduced in 2.2.4 preventing the redirect to PayPal.
+	- Fixed issue that, under a specific scenario, causes PayPal to be executed on forms without a PayPal feed.
+	- Fixed translation domain on several strings.
+	- Fixed issue that when editing an entry after previously editing payment status for that same entry, caused duplicate notes and notifications to be sent.
+
 ------------------------------------------------------------
-Version 1.10.1
-	- Fixed issue where posts were not being created if the feed were inactive with the setting to delay post creation having been previously checked
-	
+Version 2.2
+	- Added function gf_paypal() to easily get a PayPal instance.
+    - Added "gform_paypal_get_payment_feed" for backwards compatibility with the "gform_paypal_get_feeds" hook.
+	- Added function gf_paypal to easily get a PayPal instance.
+    - Added "gform_paypal_feed_settings_fields" hook to allow adding custom settings field via hooks.
+	- Added hook to allow PayPal business email to be set during IPN email verification. This will allow secondary PayPal email addresses to be configured in the feed.
+	- Updated protected functions to be public.
+	- Fixed issue with IPN page returning a 500 error on IPN messages not directed to Gravity Forms.
+	- Fixed issue with feeds not being copied over.
+
 ------------------------------------------------------------
-Version 1.10
+Version 2.1
+	- Added function to ensure feeds get copied over from legacy tables
+	- Added hooks to display payment information (edit mode) in payment info box
+	- Added paypal_fulfillment function overriding base class so that fulfillment is ignored for PayPal feeds.
+	- Fixed issue with post not getting created when manually setting payment status to 'Paid'
+	- Fixed issue with sales page displaying an error.
+
+------------------------------------------------------------
+Version 2.0.3
+	- Fixed issue where payment didn't go to paypal when certain coupons were used.
+
+------------------------------------------------------------
+Version 2.0.2
+    - Added $feed as fourth parameter to "gform_paypal_query" and "gform_paypal_request"
+
+------------------------------------------------------------
+Version 2.0.1
+	- Added logging.
+	- Updated feed transfer logic to reduce changes of feeds not getting moved over.
+
+------------------------------------------------------------
+Version 2.0
+	- Added PayPal partner integration.
+	- Updated to use the Add-On Framework.
+	- Updated single payment status to "Paid" ( from "Approved" ).
+	- Updated feed condition to support full conditional logic.
+	- Updated payment amount so that it can be associated with a specific field in the form.
+	- Updated trial amount so that it can be associated with a specific field in the form.
+
+------------------------------------------------------------
+Version 1.9.4
 	- Updated the number of recurring times maximum from 30 to 52 per PayPal documentation
+
+------------------------------------------------------------
+Version 1.9.3
     - Fixed issue where floating point comparision was failing in GFPayPal::is_valid_initial_payment_amount()
+
+------------------------------------------------------------
+Version 1.9.2
     - Added new hook: 'gform_paypal_ipn_{transaction_type}'; allows users to easily hook into the specific IPN transactions they need
+
+------------------------------------------------------------
+Version 1.9.1
 	- Fixed issue with notifications not being sent when setting "only show notifications when payment is received" is enabled and payment is $0.00
 
 ------------------------------------------------------------
