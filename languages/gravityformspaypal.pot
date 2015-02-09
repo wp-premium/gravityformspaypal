@@ -3,780 +3,306 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: Gravity Forms PayPal Standard Add-On\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-11-01 12:14-0400\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2014-10-23 14:56-0500\n"
+"PO-Revision-Date: 2014-10-23 14:56-0500\n"
+"Last-Translator: Dana Cobb <dana@rocketgenius.com>\n"
+"Language-Team: Rocketgenius <customerservice@rocketgenius.com>\n"
+"Language: en_US\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.6.10\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _e;__\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-SearchPath-0: ..\n"
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:141
-msgid "Gravity Forms "
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:148
-msgid "There is a new version of Gravity Forms PayPal Add-On available."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:148
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\plugin-upgrade.php:56
-#, php-format
-msgid "View version %s Details"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:149
-#, php-format
-msgid ""
-"%sRegister%s your copy of Gravity Forms to receive access to automatic "
-"upgrades and support. Need a license key? %sPurchase one now%s."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:188
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:561
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:976
-msgid "PayPal"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:204
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1061
-msgid "PayPal Email Address"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:204
-msgid "Enter the PayPal email address where payment should be received."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:205
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1072
-msgid "Mode"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:205
-msgid ""
-"Select Production to receive live payments. Select Test for testing purposes "
-"when using the PayPal development sandbox."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:206
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:343
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:352
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1081
-msgid "Transaction Type"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:206
-msgid ""
-"Select which PayPal transaction type should be used. Products and Services, "
-"Donations or Subscription."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:207
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1091
-msgid "Gravity Form"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:207
-msgid "Select which Gravity Forms you would like to integrate with PayPal."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:208
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1200
-msgid "Customer"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:208
-msgid ""
-"Map your Form Fields to the available PayPal customer information fields."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:209
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1211
-msgid "Page Style"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:209
-msgid ""
-"This option allows you to select which PayPal page style should be used if "
-"you have setup a custom payment page style with PayPal."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:210
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1215
-msgid "Continue Button Label"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:210
-msgid ""
-"Enter the text that should appear on the continue button once payment has "
-"been completed via PayPal."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:211
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1219
-msgid "Cancel URL"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:211
-msgid ""
-"Enter the URL the user should be sent to should they cancel before "
-"completing their PayPal payment."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:212
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1224
-msgid "Options"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:212
-msgid "Turn on or off the available PayPal checkout options."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:213
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1124
-msgid "Recurring Amount"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:213
-msgid ""
-"Select which field determines the recurring payment amount, or select 'Form "
-"Total' to use the total of all pricing fields as the recurring amount."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:214
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1131
-msgid "Billing Cycle"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:214
-msgid ""
-"Select your billing cycle.  This determines how often the recurring payment "
-"should occur."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:215
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1150
-msgid "Recurring Times"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:215
-msgid ""
-"Select how many times the recurring payment should be made.  The default is "
-"to bill the customer until the subscription is canceled."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:216
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:218
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1167
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1178
-msgid "Trial Period"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:216
-msgid ""
-"Enable a trial period.  The users recurring payment will not begin until "
-"after this trial period."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:217
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1174
-msgid "Trial Amount"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:217
-msgid "Enter the trial period amount or leave it blank for a free trial."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:218
-msgid "Select the trial period length."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:219
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1268
-msgid "PayPal Condition"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:219
-msgid ""
-"When the PayPal condition is enabled, form submissions will only be sent to "
-"PayPal when the condition is met. When disabled all form submissions will be "
-"sent to PayPal."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:291
-msgid "Feed deleted."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:302
-msgid "Feeds deleted."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:308
-msgid "PayPal Transactions"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:310
-msgid "PayPal Forms"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:314
-msgid "Add New"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:327
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:329
-msgid "Bulk action"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:330
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:392
-msgid "Delete"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:333
-msgid "Apply"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:333
-msgid "Delete selected feeds? "
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:333
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:392
-msgid "\\'Cancel\\' to stop, \\'OK\\' to delete."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:342
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:351
-msgid "Form"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:365
-#, php-format
-msgid "To get started, please configure your %sPayPal Settings%s."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:375
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:445
-msgid "Active"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:375
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:441
-msgid "Inactive"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:377
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:380
-msgid "Edit"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:384
-msgid "View Stats"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:384
-msgid "Stats"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:388
-msgid "View Entries"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:388
-msgid "Entries"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:392
-msgid "Delete this feed? "
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:400
-msgid "Product and Services"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:404
-msgid "Donation"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:408
-msgid "Subscription"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:421
-#, php-format
-msgid "You don't have any PayPal feeds configured. Let's go %screate one%s!"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:456
-msgid "Ajax error while updating feed"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:487
-msgid "PayPal Settings"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:489
+#: ../class-gf-paypal.php:58
 msgid ""
 "Gravity Forms requires IPN to be enabled on your PayPal account. Follow the "
 "following steps to confirm IPN is enabled."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:493
+#: ../class-gf-paypal.php:61
 #, php-format
 msgid "Navigate to your PayPal %sIPN Settings page.%s"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:494
+#: ../class-gf-paypal.php:62
 msgid ""
 "If IPN is already enabled, you will see your current IPN settings along with "
 "a button to turn off IPN. If that is the case, just check the confirmation "
 "box below and you are ready to go!"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:495
+#: ../class-gf-paypal.php:63
 msgid "If IPN is not enabled, click the 'Choose IPN Settings' button."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:496
+#: ../class-gf-paypal.php:64
 #, php-format
 msgid ""
 "Click the box to enable IPN and enter the following Notification URL: %s"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:500
-msgid "Confirm that your have configured your PayPal account to enable IPN"
+#: ../class-gf-paypal.php:75
+msgid "PayPal IPN Setting"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:515
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:518
-msgid "Uninstall PayPal Add-On"
+#: ../class-gf-paypal.php:77
+msgid "Confirm that you have configured your PayPal account to enable IPN"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:516
-msgid "Warning! This operation deletes ALL PayPal Feeds."
+#: ../class-gf-paypal.php:82
+msgid "Settings have been updated."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:518
-msgid ""
-"Warning! ALL PayPal Feeds will be deleted. This cannot be undone. \\'OK\\' "
-"to delete, \\'Cancel\\' to stop"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:528
-msgid "Select a product"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:562
-msgid "PayPal Stats"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:566
-msgid "Daily"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:567
-msgid "Weekly"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:568
-msgid "Monthly"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:589
-msgid "No payments have been made yet."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:652
-msgid "Week "
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:674
-msgid "Total Orders"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:679
-msgid "Total Donations"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:684
-msgid "Active Subscriptions"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:692
-msgid "Total Revenue"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:711
-msgid ""
-"** Free trial transactions will only be reflected in the graph after the "
-"first payment is made (i.e. after trial period ends)"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:763
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:831
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:902
-msgid "New Subscriptions"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:763
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:831
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:902
-msgid "Renewals"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:766
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:834
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:905
-msgid "Orders"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:769
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:837
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:908
-msgid "Revenue"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:788
-msgid "Orders Today"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:792
-msgid "Donations Today"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:796
-msgid "Subscriptions Today"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:800
-msgid "Revenue Today"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:837
-msgid "Week"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:857
-msgid "Orders this Week"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:861
-msgid "Donations this Week"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:865
-msgid "Subscriptions this Week"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:870
-msgid "Revenue this Week"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:927
-msgid "Orders this Month"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:931
-msgid "Donations this Month"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:935
-msgid "Subscriptions this Month"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:939
-msgid "Revenue this Month"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:953
-msgid "Jan"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:953
-msgid "Feb"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:953
-msgid "Mar"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:953
-msgid "Apr"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:953
-msgid "May"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:953
-msgid "Jun"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:953
-msgid "Jul"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:953
-msgid "Aug"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:953
-msgid "Sep"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:953
-msgid "Oct"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:953
-msgid "Nov"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:953
-msgid "Dec"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:977
-msgid "PayPal Transaction Settings"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1035
+#: ../class-gf-paypal.php:93
 #, php-format
-msgid "Feed Updated. %sback to list%s"
+msgid "To get started, let's go configure your %sPayPal Settings%s!"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1054
-msgid ""
-"There was an issue saving your feed. Please address the errors below and try "
-"again."
+#: ../class-gf-paypal.php:107
+msgid "PayPal Email Address "
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1075
+#: ../class-gf-paypal.php:111
+msgid "PayPal Email Address"
+msgstr ""
+
+#: ../class-gf-paypal.php:111
+msgid "Enter the PayPal email address where payment should be received."
+msgstr ""
+
+#: ../class-gf-paypal.php:115 ../class-gf-paypal.php:125
+msgid "Mode"
+msgstr ""
+
+#: ../class-gf-paypal.php:118
 msgid "Production"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1078
+#: ../class-gf-paypal.php:119
 msgid "Test"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1084
-msgid "Select a transaction type"
+#: ../class-gf-paypal.php:125
+msgid ""
+"Select Production to receive live payments. Select Test for testing purposes "
+"when using the PayPal development sandbox."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1085
-msgid "Products and Services"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1086
+#: ../class-gf-paypal.php:144
 msgid "Donations"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1087
-msgid "Subscriptions"
+#: ../class-gf-paypal.php:154 ../class-gf-paypal.php:158
+msgid "Page Style"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1094
-msgid "Select a form"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1114
+#: ../class-gf-paypal.php:158
 msgid ""
-"The form selected does not have any Product fields. Please add a Product "
-"field to the form and try again."
+"This option allows you to select which PayPal page style should be used if "
+"you have setup a custom payment page style with PayPal."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1117
+#: ../class-gf-paypal.php:162 ../class-gf-paypal.php:166
+msgid "Continue Button Label"
+msgstr ""
+
+#: ../class-gf-paypal.php:166
 msgid ""
-"The form selected does not have any Donation fields. Please add a Donation "
-"field to the form and try again."
+"Enter the text that should appear on the continue button once payment has "
+"been completed via PayPal."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1142
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1189
-msgid "day(s)"
+#: ../class-gf-paypal.php:170 ../class-gf-paypal.php:174
+msgid "Cancel URL"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1143
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1190
-msgid "week(s)"
+#: ../class-gf-paypal.php:174
+msgid ""
+"Enter the URL the user should be sent to should they cancel before "
+"completing their PayPal payment."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1144
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1191
-msgid "month(s)"
+#: ../class-gf-paypal.php:178 ../class-gf-paypal.php:180
+msgid "Options"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1145
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1192
-msgid "year(s)"
+#: ../class-gf-paypal.php:180
+msgid "Turn on or off the available PayPal checkout options."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1152
-msgid "Infinite"
+#: ../class-gf-paypal.php:184 ../class-gf-paypal.php:186
+msgid "Notifications"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1163
-msgid "Try to bill again after failed attempt."
+#: ../class-gf-paypal.php:186
+msgid ""
+"Enable this option if you would like to only send out this form's "
+"notifications after payment has been received. Leaving this option disabled "
+"will send notifications immediately after the form is submitted."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1169
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1275
-msgid "Enable"
+#: ../class-gf-paypal.php:195 ../class-gf-paypal.php:197
+msgid "Posts"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1229
-msgid "Do not prompt buyer to include a shipping address."
+#: ../class-gf-paypal.php:197
+msgid ""
+"Enable this option if you would like to only create the post after payment "
+"has been received."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1233
-msgid "Do not prompt buyer to include a note with payment."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1237
-msgid "Send admin notification only when payment is received."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1241
-msgid "Send user notification only when payment is received."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1248
+#: ../class-gf-paypal.php:199
 msgid "Create post only when payment is received."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1253
-msgid "Update Post when subscription is cancelled."
+#: ../class-gf-paypal.php:205
+msgid "Change post status when subscription is canceled."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1256
+#: ../class-gf-paypal.php:240
+msgid "Last Name"
+msgstr ""
+
+#: ../class-gf-paypal.php:243
+msgid "First Name"
+msgstr ""
+
+#: ../class-gf-paypal.php:254 ../class-gf-paypal.php:257
+msgid "Trial Period"
+msgstr ""
+
+#: ../class-gf-paypal.php:257
+msgid "Select the trial period length."
+msgstr ""
+
+#: ../class-gf-paypal.php:265 ../class-gf-paypal.php:269
+msgid "Recurring Retry"
+msgstr ""
+
+#: ../class-gf-paypal.php:268
+msgid "Try to bill again after failed attempt."
+msgstr ""
+
+#: ../class-gf-paypal.php:269
+msgid "Turn on or off whether to try to bill again after failed attempt."
+msgstr ""
+
+#: ../class-gf-paypal.php:279
+msgid "PayPal Field"
+msgstr ""
+
+#: ../class-gf-paypal.php:314 ../class-gf-paypal.php:464
+msgid "Do not prompt buyer to include a shipping address."
+msgstr ""
+
+#: ../class-gf-paypal.php:315 ../class-gf-paypal.php:465
+msgid "Do not prompt buyer to include a note with payment."
+msgstr ""
+
+#: ../class-gf-paypal.php:369
+msgid "Send notifications only when payment is received."
+msgstr ""
+
+#: ../class-gf-paypal.php:450
 msgid "Mark Post as Draft"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1257
+#: ../class-gf-paypal.php:451
 msgid "Delete Post"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1283
-msgid "Send to PayPal if "
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1289
-msgid "is"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1290
-msgid "is not"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1297
-msgid ""
-"To create a registration condition, your form must have a drop down, "
-"checkbox or multiple choice field"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1309
-msgid "  Save  "
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1309
-msgid "Update"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1310
-msgid "Cancel"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1357
-msgid "Ajax error while selecting a form"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1637
+#: ../class-gf-paypal.php:531
 msgid "Click here to continue"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1824
+#: ../class-gf-paypal.php:1167
 #, php-format
-msgid "Subscription payment has been made. Amount: %s. Transaction Id: %s"
+msgid ""
+"Payment amount (%s) does not match subscription amount. Subscription will "
+"not be activated. Transaction Id: %s"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1843
+#: ../class-gf-paypal.php:1233
 #, php-format
-msgid "Subscription has been cancelled. Subscriber Id: %s"
+msgid ""
+"Payment amount (%s) does not match product price. Entry will not be marked "
+"as Approved. Transaction Id: %s"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1863
-#, php-format
-msgid "Subscription has expired. Subscriber Id: %s"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1872
-#, php-format
-msgid "Subscription signup has failed. Subscriber Id: %s"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1894
-#, php-format
-msgid "Payment has been approved. Amount: %s. Transaction Id: %s"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1906
+#: ../class-gf-paypal.php:1246
 #, php-format
 msgid "Payment has been reversed. Transaction Id: %s. Reason: %s"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1918
+#: ../class-gf-paypal.php:1254
 #, php-format
 msgid ""
 "Payment reversal has been canceled and the funds have been transferred to "
 "your account. Transaction Id: %s"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1930
-#, php-format
-msgid "Payment has been denied. Transaction Id: %s"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1944
+#: ../class-gf-paypal.php:1267
 #, php-format
 msgid "Payment is pending. Amount: %s. Transaction Id: %s. Reason: %s"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1956
-#, php-format
-msgid "Payment has been refunded. Refunded amount: %s. Transaction Id: %s"
+#: ../class-gf-paypal.php:1408
+msgid "Reversal of an adjustment"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1968
-#, php-format
-msgid "Authorization has been voided. Transaction Id: %s"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1980
-#, php-format
+#: ../class-gf-paypal.php:1410
 msgid ""
-"Payment has been authorized. You can capture funds from your PayPal control "
-"panel. Transaction Id: %s"
+"A reversal has occurred on this transaction due to a complaint about the "
+"transaction from your customer."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:1991
-#, php-format
+#: ../class-gf-paypal.php:1413
 msgid ""
-"Payment has Failed. Failed payments occur when they are made via your "
-"customer's bank account and could not be completed. Transaction Id: %s"
+"A reversal has occurred on this transaction due to a chargeback by your "
+"customer."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2037
-#, php-format
-msgid "Subscription has been created. Subscriber Id: %s"
+#: ../class-gf-paypal.php:1416
+msgid "Reimbursement for a chargeback."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2044
+#: ../class-gf-paypal.php:1419
+msgid "Settlement of a chargeback."
+msgstr ""
+
+#: ../class-gf-paypal.php:1422
+msgid ""
+"A reversal has occurred on this transaction due to your customer triggering "
+"a money-back guarantee."
+msgstr ""
+
+#: ../class-gf-paypal.php:1425
+msgid "Non-specified reason."
+msgstr ""
+
+#: ../class-gf-paypal.php:1428
+msgid ""
+"A reversal has occurred on this transaction because you have given the "
+"customer a refund."
+msgstr ""
+
+#: ../class-gf-paypal.php:1431 ../class-gf-paypal.php:1476
+#: ../class-gf-paypal.php:1479
+msgid ""
+"Reason has not been specified. For more information, contact PayPal Customer "
+"Service."
+msgstr ""
+
+#: ../class-gf-paypal.php:1446
 msgid ""
 "The payment is pending because your customer did not include a confirmed "
 "shipping address and your Payment Receiving Preferences is set to allow you "
@@ -784,46 +310,46 @@ msgid ""
 "preference, go to the Preferences section of your Profile."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2047
+#: ../class-gf-paypal.php:1449
 msgid ""
 "You set the payment action to Authorization and have not yet captured funds."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2050
+#: ../class-gf-paypal.php:1452
 msgid ""
 "The payment is pending because it was made by an eCheck that has not yet "
 "cleared."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2053
+#: ../class-gf-paypal.php:1455
 msgid ""
 "The payment is pending because you hold a non-U.S. account and do not have a "
 "withdrawal mechanism. You must manually accept or deny this payment from "
 "your Account Overview."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2056
+#: ../class-gf-paypal.php:1458
 msgid ""
 "You do not have a balance in the currency sent, and you do not have your "
 "Payment Receiving Preferences set to automatically convert and accept this "
 "payment. You must manually accept or deny this payment."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2059
+#: ../class-gf-paypal.php:1461
 msgid "You set the payment action to Order and have not yet captured funds."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2062
+#: ../class-gf-paypal.php:1464
 msgid "The payment is pending while it is being reviewed by PayPal for risk."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2065
+#: ../class-gf-paypal.php:1467
 msgid ""
 "The payment is pending because it was made to an email address that is not "
 "yet registered or confirmed."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2068
+#: ../class-gf-paypal.php:1470
 msgid ""
 "The payment is pending because it was made via credit card and you must "
 "upgrade your account to Business or Premier status in order to receive the "
@@ -831,85 +357,43 @@ msgid ""
 "transactions on your account."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2071
+#: ../class-gf-paypal.php:1473
 msgid ""
 "The payment is pending because you are not yet verified. You must verify "
 "your account before you can accept this payment."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2074
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2077
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2108
+#: ../class-gf-paypal.php:1555
+msgid "PayPal Add-On v2.0"
+msgstr ""
+
+#: ../class-gf-paypal.php:1556
 msgid ""
-"Reason has not been specified. For more information, contact PayPal Customer "
-"Service."
+"Thank you for updating! The new version of the Gravity Forms PayPal Standard "
+"Add-On makes changes to how you manage your PayPal integration."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2085
-msgid "Reversal of an adjustment"
+#: ../class-gf-paypal.php:1561
+msgid "Manage PayPal Contextually"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2087
+#: ../class-gf-paypal.php:1562
 msgid ""
-"A reversal has occurred on this transaction due to a complaint about the "
-"transaction from your customer."
+"PayPal Feeds are now accessed via the PayPal sub-menu within the Form "
+"Settings for the Form you would like to integrate PayPal with."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2090
-msgid ""
-"A reversal has occurred on this transaction due to a chargeback by your "
-"customer."
+#: ../class-gf-paypal.php:1572
+msgid "I understand this change, dismiss this message!"
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2093
-msgid "Reimbursement for a chargeback."
+#: ../class-gf-paypal.php:1573
+msgid "Please wait..."
 msgstr ""
 
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2096
-msgid "Settlement of a chargeback."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2099
-msgid ""
-"A reversal has occurred on this transaction due to your customer triggering "
-"a money-back guarantee."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2102
-msgid "Non-specified reason."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2105
-msgid ""
-"A reversal has occurred on this transaction because you have given the "
-"customer a refund."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2300
-msgid "with options"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2311
-msgid "You don't have adequate permission to uninstall the PayPal Add-On."
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2355
-msgid "PayPal Fields"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2355
-msgid "Form Fields"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2388
-msgid "Select a field"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\paypal.php:2400
-msgid "Form Total"
-msgstr ""
-
-#: C:\xampp\htdocs\wp3\wp-content\plugins\gravityformspaypal\plugin-upgrade.php:75
+#: ../class-gf-paypal.php:1744
 #, php-format
-msgid "Oops!! Something went wrong.%sPlease try again or %scontact us%s."
+msgid ""
+"Payment information was manually updated. Status: %s. Amount: %s. "
+"Transaction Id: %s. Date: %s"
 msgstr ""
