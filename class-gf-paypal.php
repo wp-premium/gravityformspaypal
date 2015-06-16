@@ -61,7 +61,7 @@ class GFPayPal extends GFPaymentAddOn {
 				<li>' . sprintf( __( 'Navigate to your PayPal %sIPN Settings page.%s', 'gravityformspaypal' ), '<a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-ipn-notify" target="_blank">', '</a>' ) . '</li>' .
 			'<li>' . __( 'If IPN is already enabled, you will see your current IPN settings along with a button to turn off IPN. If that is the case, just check the confirmation box below and you are ready to go!', 'gravityformspaypal' ) . '</li>' .
 			'<li>' . __( "If IPN is not enabled, click the 'Choose IPN Settings' button.", 'gravityformspaypal' ) . '</li>' .
-			'<li>' . sprintf( __( 'Click the box to enable IPN and enter the following Notification URL: %s', 'gravityformspaypal' ), '<strong>' . add_query_arg( 'page', 'gf_paypal_ipn', get_bloginfo( 'url' ) . '/' ) . '</strong>' ) . '</li>' .
+			'<li>' . sprintf( __( 'Click the box to enable IPN and enter the following Notification URL: %s', 'gravityformspaypal' ), '<strong>' . esc_url( add_query_arg( 'page', 'gf_paypal_ipn', get_bloginfo( 'url' ) . '/' ) ) . '</strong>' ) . '</li>' .
 			'</ul>
 				<br/>';
 
@@ -275,6 +275,18 @@ class GFPayPal extends GFPaymentAddOn {
 		return apply_filters( 'gform_paypal_feed_settings_fields', $default_settings, $form );
 	}
 
+	public function supported_billing_intervals() {
+
+		$billing_cycles = array(
+			'day'   => array( 'label' => __( 'day(s)', 'gravityformspaypal' ), 'min' => 1, 'max' => 90 ),
+			'week'  => array( 'label' => __( 'week(s)', 'gravityformspaypal' ), 'min' => 1, 'max' => 52 ),
+			'month' => array( 'label' => __( 'month(s)', 'gravityformspaypal' ), 'min' => 1, 'max' => 24 ),
+			'year'  => array( 'label' => __( 'year(s)', 'gravityformspaypal' ), 'min' => 1, 'max' => 5 )
+		);
+
+		return $billing_cycles;
+	}
+
 	public function field_map_title() {
 		return __( 'PayPal Field', 'gravityformspaypal' );
 	}
@@ -390,7 +402,9 @@ class GFPayPal extends GFPaymentAddOn {
 
 				//$selected_notifications = empty($selected_notifications) ? array() : json_decode($selected_notifications);
 
-				foreach ( $form['notifications'] as $notification ) {
+				$notifications = GFCommon::get_notifications( 'form_submission', $form );
+
+				foreach ( $notifications as $notification ) {
 					?>
 					<li class="gf_paypal_notification">
 						<input type="checkbox" class="notification_checkbox" value="<?php echo $notification['id'] ?>" onclick="SaveNotifications();" <?php checked( true, in_array( $notification['id'], $selected_notifications ) ) ?> />
@@ -571,7 +585,7 @@ class GFPayPal extends GFPaymentAddOn {
 		$query_string = apply_filters( "gform_paypal_query_{$form['id']}", apply_filters( 'gform_paypal_query', $query_string, $form, $entry, $feed ), $form, $entry, $feed );
 
 		if ( ! $query_string ) {
-			$this->log_debug( 'NOT sending to PayPal: The price is either zero or the gform_paypal_query filter was used to remove the querystring that is sent to PayPal.' );
+			$this->log_debug( __METHOD__ . '(): NOT sending to PayPal: The price is either zero or the gform_paypal_query filter was used to remove the querystring that is sent to PayPal.' );
 
 			return '';
 		}
@@ -583,7 +597,7 @@ class GFPayPal extends GFPaymentAddOn {
 		//add the bn code (build notation code)
 		$url .= '&bn=Rocketgenius_SP';
 
-		$this->log_debug( "Sending to PayPal: {$url}" );
+		$this->log_debug( __METHOD__ . "(): Sending to PayPal: {$url}" );
 
 		return $url;
 	}
@@ -828,9 +842,9 @@ class GFPayPal extends GFPaymentAddOn {
 			$value    = rgar( $lead, $field_id );
 
 			if ( $field['name'] == 'country' ) {
-				$value = GFCommon::get_country_code( $value );
-			} else if ( $field['name'] == 'state' ) {
-				$value = GFCommon::get_us_state_code( $value );
+				$value = class_exists( 'GF_Field_Address' ) ? GF_Fields::get( 'address' )->get_country_code( $value ) : GFCommon::get_country_code( $value );
+			} elseif ( $field['name'] == 'state' ) {
+				$value = class_exists( 'GF_Field_Address' ) ? GF_Fields::get( 'address' )->get_us_state_code( $value ) : GFCommon::get_us_state_code( $value );
 			}
 
 			if ( ! empty( $value ) ) {
@@ -844,8 +858,10 @@ class GFPayPal extends GFPaymentAddOn {
 	public function return_url( $form_id, $lead_id ) {
 		$pageURL = GFCommon::is_ssl() ? 'https://' : 'http://';
 
-		if ( $_SERVER['SERVER_PORT'] != '80' ) {
-			$pageURL .= $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT'] . $_SERVER['REQUEST_URI'];
+		$server_port = apply_filters( 'gform_paypal_return_url_port', $_SERVER['SERVER_PORT'] );
+
+		if ( $server_port != '80' ) {
+			$pageURL .= $_SERVER['SERVER_NAME'] . ':' . $server_port . $_SERVER['REQUEST_URI'];
 		} else {
 			$pageURL .= $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
 		}
@@ -989,17 +1005,21 @@ class GFPayPal extends GFPaymentAddOn {
 			return false;
 		}
 
-		$this->log_debug( 'IPN request received. Starting to process...' );
-		$this->log_debug( print_r( $_POST, true ) );
+		$this->log_debug( __METHOD__ . '(): IPN request received. Starting to process => ' . print_r( $_POST, true ) );
 
 
 		//------- Send request to paypal and verify it has not been spoofed ---------------------//
-		if ( ! $this->verify_paypal_ipn() ) {
-			$this->log_error( 'IPN request could not be verified by PayPal. Aborting.' );
-
+		$is_verified = $this->verify_paypal_ipn();
+		if ( is_wp_error( $is_verified ) ){
+			$this->log_error( __METHOD__ . '(): IPN verification failed with an error. Aborting with a 500 error so that IPN is resent.' );
+			return new WP_Error( 'IPNVerificationError', 'There was an error when verifying the IPN message with PayPal', array( 'status_header' => 500 ) );
+		}
+		else if ( ! $is_verified ){
+			$this->log_error( __METHOD__ . '(): IPN request could not be verified by PayPal. Aborting.' );
 			return false;
 		}
-		$this->log_debug( 'IPN message successfully verified by PayPal' );
+
+		$this->log_debug( __METHOD__ . '(): IPN message successfully verified by PayPal' );
 
 
 		//------ Getting entry related to this IPN ----------------------------------------------//
@@ -1007,11 +1027,17 @@ class GFPayPal extends GFPaymentAddOn {
 
 		//Ignore orphan IPN messages (ones without an entry)
 		if ( ! $entry ) {
-			$this->log_error( 'Entry could not be found. Entry ID: ' . $entry['id'] . '. Aborting.' );
+			$this->log_error( __METHOD__ . '(): Entry could not be found. Aborting.' );
 
 			return false;
 		}
-		$this->log_debug( 'Entry has been found.' . print_r( $entry, true ) );
+		$this->log_debug( __METHOD__ . '(): Entry has been found => ' . print_r( $entry, true ) );
+
+		if ( $entry['status'] == 'spam' ) {
+			$this->log_error( __METHOD__ . '(): Entry is marked as spam. Aborting.' );
+
+			return false;
+		}
 
 
 		//------ Getting feed related to this IPN ------------------------------------------//
@@ -1019,25 +1045,25 @@ class GFPayPal extends GFPaymentAddOn {
 
 		//Ignore IPN messages from forms that are no longer configured with the PayPal add-on
 		if ( ! $feed || ! rgar( $feed, 'is_active' ) ) {
-			$this->log_error( "Form no longer is configured with PayPal Addon. Form ID: {$entry['form_id']}. Aborting." );
+			$this->log_error( __METHOD__ . "(): Form no longer is configured with PayPal Addon. Form ID: {$entry['form_id']}. Aborting." );
 
 			return false;
 		}
-		$this->log_debug( "Form {$entry['form_id']} is properly configured." );
+		$this->log_debug( __METHOD__ . "(): Form {$entry['form_id']} is properly configured." );
 
 
 		//----- Making sure this IPN can be processed -------------------------------------//
 		if ( ! $this->can_process_ipn( $feed, $entry ) ) {
-			$this->log_debug( 'IPN cannot be processed.' );
+			$this->log_debug( __METHOD__ . '(): IPN cannot be processed.' );
 
 			return false;
 		}
 
 
 		//----- Processing IPN ------------------------------------------------------------//
-		$this->log_debug( 'Processing IPN...' );
+		$this->log_debug( __METHOD__ . '(): Processing IPN...' );
 		$action = $this->process_ipn( $feed, $entry, rgpost( 'payment_status' ), rgpost( 'txn_type' ), rgpost( 'txn_id' ), rgpost( 'parent_txn_id' ), rgpost( 'subscr_id' ), rgpost( 'mc_gross' ), rgpost( 'pending_reason' ), rgpost( 'reason_code' ), rgpost( 'mc_amount3' ) );
-		$this->log_debug( 'IPN processing complete.' );
+		$this->log_debug( __METHOD__ . '(): IPN processing complete.' );
 
 		if ( rgempty( 'entry_id', $action ) ) {
 			return false;
@@ -1070,7 +1096,7 @@ class GFPayPal extends GFPaymentAddOn {
 	}
 
 	public function post_callback( $callback_action, $callback_result ) {
-		if ( ! $callback_action ){
+		if ( is_wp_error( $callback_action ) || ! $callback_action ){
 			return false;
 		}
 
@@ -1092,24 +1118,27 @@ class GFPayPal extends GFPaymentAddOn {
 		} 
 		else {
 			if ( rgar( $callback_action, 'abort_callback' ) ){
-				$this->log_debug( 'Callback processing was aborted. Not fulfilling entry.' );
+				$this->log_debug( __METHOD__ . '(): Callback processing was aborted. Not fulfilling entry.' );
 			}
 			else {
-				$this->log_debug( 'Entry is already fulfilled or not ready to be fulfilled, not running gform_paypal_fulfillment hook.' );
+				$this->log_debug( __METHOD__ . '(): Entry is already fulfilled or not ready to be fulfilled, not running gform_paypal_fulfillment hook.' );
 			}
 		}
 
-		$this->log_debug( 'Before gform_post_payment_status.' );
 		do_action( 'gform_post_payment_status', $feed, $entry, $status, $transaction_id, $subscriber_id, $amount, $pending_reason, $reason );
-		$this->log_debug( 'After gform_post_payment_status.' );
+		if ( has_filter( 'gform_post_payment_status' ) ) {
+			$this->log_debug( __METHOD__ . '(): Executing functions hooked to gform_post_payment_status.' );
+		}
 
-		$this->log_debug( 'Before gform_paypal_ipn_' . $txn_type );
 		do_action( 'gform_paypal_ipn_' . $txn_type, $entry, $feed, $status, $txn_type, $transaction_id, $parent_txn_id, $subscriber_id, $amount, $pending_reason, $reason );
-		$this->log_debug( 'After gform_paypal_ipn_' . $txn_type );
+		if ( has_filter( 'gform_paypal_ipn_' . $txn_type ) ) {
+			$this->log_debug( __METHOD__ . "(): Executing functions hooked to gform_paypal_ipn_{$txn_type}." );
+		}
 
-		$this->log_debug( 'Before gform_paypal_post_ipn.' );
 		do_action( 'gform_paypal_post_ipn', $_POST, $entry, $feed, false );
-		$this->log_debug( 'After gform_paypal_post_ipn.' );
+		if ( has_filter( 'gform_paypal_post_ipn' ) ) {
+			$this->log_debug( __METHOD__ . '(): Executing functions hooked to gform_paypal_post_ipn.' );
+		}
 	}
 
 	private function verify_paypal_ipn() {
@@ -1122,7 +1151,7 @@ class GFPayPal extends GFPaymentAddOn {
 
 		$url = rgpost( 'test_ipn' ) ? $this->sandbox_url : $this->production_url;
 
-		$this->log_debug( "Sending IPN request to PayPal for validation. URL: $url - Data: $req" );
+		$this->log_debug( __METHOD__ . "(): Sending IPN request to PayPal for validation. URL: $url - Data: $req" );
 
 		$url_info = parse_url( $url );
 
@@ -1130,13 +1159,18 @@ class GFPayPal extends GFPaymentAddOn {
 		$request  = new WP_Http();
 		$headers  = array( 'Host' => $url_info['host'] );
 		$response = $request->post( $url, array( 'httpversion' => '1.1', 'headers' => $headers, 'sslverify' => false, 'ssl' => true, 'body' => $req, 'timeout' => 20 ) );
-		$this->log_debug( 'Response: ' . print_r( $response, true ) );
+		$this->log_debug( __METHOD__ . '(): Response: ' . print_r( $response, true ) );
 
-		return ! is_wp_error( $response ) && trim( $response['body'] ) == 'VERIFIED';
+		if ( is_wp_error( $response ) ){
+			return $response;
+		}
+
+		return trim( $response['body'] ) == 'VERIFIED';
+
 	}
 
 	private function process_ipn( $config, $entry, $status, $transaction_type, $transaction_id, $parent_transaction_id, $subscriber_id, $amount, $pending_reason, $reason, $recurring_amount ) {
-		$this->log_debug( "Payment status: {$status} - Transaction Type: {$transaction_type} - Transaction ID: {$transaction_id} - Parent Transaction: {$parent_transaction_id} - Subscriber ID: {$subscriber_id} - Amount: {$amount} - Pending reason: {$pending_reason} - Reason: {$reason}" );
+		$this->log_debug( __METHOD__ . "(): Payment status: {$status} - Transaction Type: {$transaction_type} - Transaction ID: {$transaction_id} - Parent Transaction: {$parent_transaction_id} - Subscriber ID: {$subscriber_id} - Amount: {$amount} - Pending reason: {$pending_reason} - Reason: {$reason}" );
 
 		$action = array();
 		switch ( strtolower( $transaction_type ) ) {
@@ -1163,7 +1197,7 @@ class GFPayPal extends GFPaymentAddOn {
 				
 				if ( ! $this->is_valid_initial_payment_amount( $entry['id'], $recurring_amount ) ){
 					//create note and transaction
-					$this->log_debug( 'Payment amount does not match subscription amount. Subscription will not be activated.' );
+					$this->log_debug( __METHOD__ . '(): Payment amount does not match subscription amount. Subscription will not be activated.' );
 					GFPaymentAddOn::add_note( $entry['id'], sprintf( __( 'Payment amount (%s) does not match subscription amount. Subscription will not be activated. Transaction Id: %s', 'gravityformspaypal' ), GFCommon::to_money( $recurring_amount, $entry['currency'] ), $subscriber_id ) );
 					GFPaymentAddOn::insert_transaction( $entry['id'], 'payment', $subscriber_id, $recurring_amount );
 
@@ -1218,7 +1252,7 @@ class GFPayPal extends GFPaymentAddOn {
 				switch ( strtolower( $status ) ) {
 					case 'completed' :
 						//creates transaction
-						$action['id']               = $transaction_id;
+						$action['id']               = $transaction_id . '_' . $status;
 						$action['type']             = 'complete_payment';
 						$action['transaction_id']   = $transaction_id;
 						$action['amount']           = $amount;
@@ -1229,7 +1263,7 @@ class GFPayPal extends GFPaymentAddOn {
 						
 						if ( ! $this->is_valid_initial_payment_amount( $entry['id'], $amount ) ){
 							//create note and transaction
-							$this->log_debug( 'Payment amount does not match product price. Entry will not be marked as Approved.' );
+							$this->log_debug( __METHOD__ . '(): Payment amount does not match product price. Entry will not be marked as Approved.' );
 							GFPaymentAddOn::add_note( $entry['id'], sprintf( __( 'Payment amount (%s) does not match product price. Entry will not be marked as Approved. Transaction Id: %s', 'gravityformspaypal' ), GFCommon::to_money( $amount, $entry['currency'] ), $transaction_id ) );
 							GFPaymentAddOn::insert_transaction( $entry['id'], 'payment', $transaction_id, $amount );
 
@@ -1241,7 +1275,7 @@ class GFPayPal extends GFPaymentAddOn {
 
 					case 'reversed' :
 						//creates transaction
-						$this->log_debug( 'Processing reversal.' );
+						$this->log_debug( __METHOD__ . '(): Processing reversal.' );
 						GFAPI::update_entry_property( $entry['id'], 'payment_status', 'Refunded' );
 						GFPaymentAddOn::add_note( $entry['id'], sprintf( __( 'Payment has been reversed. Transaction Id: %s. Reason: %s', 'gravityformspaypal' ), $transaction_id, $this->get_reason( $reason ) ) );
 						GFPaymentAddOn::insert_transaction( $entry['id'], 'refund', $action['transaction_id'], $action['amount'] );
@@ -1249,7 +1283,7 @@ class GFPayPal extends GFPaymentAddOn {
 
 					case 'canceled_reversal' :
 						//creates transaction
-						$this->log_debug( 'Processing a reversal cancellation' );
+						$this->log_debug( __METHOD__ . '(): Processing a reversal cancellation' );
 						GFAPI::update_entry_property( $entry['id'], 'payment_status', 'Paid' );
 						GFPaymentAddOn::add_note( $entry['id'], sprintf( __( 'Payment reversal has been canceled and the funds have been transferred to your account. Transaction Id: %s', 'gravityformspaypal' ), $entry['transaction_id'] ) );
 						GFPaymentAddOn::insert_transaction( $entry['id'], 'payment', $action['transaction_id'], $action['amount'] );
@@ -1257,7 +1291,7 @@ class GFPayPal extends GFPaymentAddOn {
 
 					case 'processed' :
 					case 'pending' :
-						$action['id']             = $transaction_id;
+						$action['id']             = $transaction_id . '_' . $status;
 						$action['type']           = 'add_pending_payment';
 						$action['transaction_id'] = $transaction_id;
 						$action['entry_id']       = $entry['id'];
@@ -1270,7 +1304,7 @@ class GFPayPal extends GFPaymentAddOn {
 						break;
 
 					case 'refunded' :
-						$action['id']             = $transaction_id;
+						$action['id']             = $transaction_id . '_' . $status;
 						$action['type']           = 'refund_payment';
 						$action['transaction_id'] = $transaction_id;
 						$action['entry_id']       = $entry['id'];
@@ -1280,7 +1314,7 @@ class GFPayPal extends GFPaymentAddOn {
 						break;
 
 					case 'voided' :
-						$action['id']             = $transaction_id;
+						$action['id']             = $transaction_id . '_' . $status;
 						$action['type']           = 'void_authorization';
 						$action['transaction_id'] = $transaction_id;
 						$action['entry_id']       = $entry['id'];
@@ -1291,7 +1325,7 @@ class GFPayPal extends GFPaymentAddOn {
 
 					case 'denied' :
 					case 'failed' :
-						$action['id']             = $transaction_id;
+						$action['id']             = $transaction_id . '_' . $status;
 						$action['type']           = 'fail_payment';
 						$action['transaction_id'] = $transaction_id;
 						$action['entry_id']       = $entry['id'];
@@ -1309,7 +1343,7 @@ class GFPayPal extends GFPaymentAddOn {
 
 		//Valid IPN requests must have a custom field
 		if ( empty( $custom_field ) ) {
-			$this->log_error( 'IPN request does not have a custom field, so it was not created by Gravity Forms. Aborting.' );
+			$this->log_error( __METHOD__ . '(): IPN request does not have a custom field, so it was not created by Gravity Forms. Aborting.' );
 
 			return false;
 		}
@@ -1323,24 +1357,30 @@ class GFPayPal extends GFPaymentAddOn {
 
 		//Validates that Entry Id wasn't tampered with
 		if ( ! rgpost( 'test_ipn' ) && ! $hash_matches ) {
-			$this->log_error( "Entry Id verification failed. Hash does not match. Custom field: {$custom_field}. Aborting." );
+			$this->log_error( __METHOD__ . "(): Entry Id verification failed. Hash does not match. Custom field: {$custom_field}. Aborting." );
 
 			return false;
 		}
 
-		$this->log_debug( "IPN message has a valid custom field: {$custom_field}" );
+		$this->log_debug( __METHOD__ . "(): IPN message has a valid custom field: {$custom_field}" );
 
 		$entry = GFAPI::get_entry( $entry_id );
+
+		if ( is_wp_error( $entry ) ) {
+			$this->log_error( __METHOD__ . '(): ' . $entry->get_error_message() );
+
+			return false;
+		}
 
 		return $entry;
 	}
 
 	public function can_process_ipn( $feed, $entry ) {
 
-		$this->log_debug( 'Checking that IPN can be processed.' );
+		$this->log_debug( __METHOD__ . '(): Checking that IPN can be processed.' );
 		//Only process test messages coming fron SandBox and only process production messages coming from production PayPal
 		if ( ( $feed['meta']['mode'] == 'test' && ! rgpost( 'test_ipn' ) ) || ( $feed['meta']['mode'] == 'production' && rgpost( 'test_ipn' ) ) ) {
-			$this->log_error( "Invalid test/production mode. IPN message mode (test/production) does not match mode configured in the PayPal feed. Configured Mode: {$feed['meta']['mode']}. IPN test mode: " . rgpost( 'test_ipn' ) );
+			$this->log_error( __METHOD__ . "(): Invalid test/production mode. IPN message mode (test/production) does not match mode configured in the PayPal feed. Configured Mode: {$feed['meta']['mode']}. IPN test mode: " . rgpost( 'test_ipn' ) );
 
 			return false;
 		}
@@ -1350,7 +1390,7 @@ class GFPayPal extends GFPaymentAddOn {
 
 		$recipient_email = rgempty( 'business' ) ? rgpost( 'receiver_email' ) : rgpost( 'business' );
 		if ( strtolower( trim( $recipient_email ) ) != strtolower( trim( $business_email ) ) ) {
-			$this->log_error( 'PayPal email does not match. Email entered on PayPal feed:' . strtolower( trim( $business_email ) ) . ' - Email from IPN message: ' . $recipient_email );
+			$this->log_error( __METHOD__ . '(): PayPal email does not match. Email entered on PayPal feed:' . strtolower( trim( $business_email ) ) . ' - Email from IPN message: ' . $recipient_email );
 
 			return false;
 		}
@@ -1359,8 +1399,11 @@ class GFPayPal extends GFPaymentAddOn {
 		$cancel = apply_filters( 'gform_paypal_pre_ipn', false, $_POST, $entry, $feed );
 
 		if ( $cancel ) {
-			$this->log_debug( 'IPN processing cancelled by the gform_paypal_pre_ipn filter. Aborting.' );
+			$this->log_debug( __METHOD__ . '(): IPN processing cancelled by the gform_paypal_pre_ipn filter. Aborting.' );
 			do_action( 'gform_paypal_post_ipn', $_POST, $entry, $feed, true );
+			if ( has_filter( 'gform_paypal_post_ipn' ) ) {
+				$this->log_debug( __METHOD__ . '(): Executing functions hooked to gform_paypal_post_ipn.' );
+			}
 
 			return false;
 		}
@@ -1390,11 +1433,11 @@ class GFPayPal extends GFPaymentAddOn {
 				$post = get_post( $post_id );
 				$post->post_status = 'draft';
 				$result = wp_update_post( $post );
-				$this->log_debug( "Set post (#{$post_id}) status to \"draft\"." );
+				$this->log_debug( __METHOD__ . "(): Set post (#{$post_id}) status to \"draft\"." );
 				break;
 			case 'delete':
 				$result = wp_delete_post( $post_id );
-				$this->log_debug( "Deleted post (#{$post_id})." );
+				$this->log_debug( __METHOD__ . "(): Deleted post (#{$post_id})." );
 				break;
 		}
 
@@ -1754,9 +1797,9 @@ class GFPayPal extends GFPaymentAddOn {
 
 		$form = GFFormsModel::get_form_meta( $entry['form_id'] );
 		if ( rgars( $feed, 'meta/delayPost' ) ) {
-			$this->log_debug( 'Creating post.' );
+			$this->log_debug( __METHOD__ . '(): Creating post.' );
 			$entry['post_id'] = GFFormsModel::create_post( $form, $entry );
-			$this->log_debug( 'Post created.' );
+			$this->log_debug( __METHOD__ . '(): Post created.' );
 		}
 
 		if ( rgars( $feed, 'meta/delayNotification' ) ) {
@@ -1765,9 +1808,10 @@ class GFPayPal extends GFPaymentAddOn {
 			GFCommon::send_notifications( $notifications, $form, $entry, true, 'form_submission' );
 		}
 
-		$this->log_debug( 'Before gform_paypal_fulfillment.' );
 		do_action( 'gform_paypal_fulfillment', $entry, $feed, $transaction_id, $amount );
-		$this->log_debug( 'After gform_paypal_fulfillment.' );
+		if ( has_filter( 'gform_paypal_fulfillment' ) ) {
+			$this->log_debug( __METHOD__ . '(): Executing functions hooked to gform_paypal_fulfillment.' );
+		}
 
 	}
 
@@ -1801,8 +1845,10 @@ class GFPayPal extends GFPaymentAddOn {
 
 	//Change data when upgrading from legacy paypal
 	public function upgrade( $previous_version ) {
-
-		$previous_is_pre_addon_framework = version_compare( $previous_version, '2.0.dev1', '<' );
+		if ( empty( $previous_version ) ) {
+			$previous_version = get_option( 'gf_paypal_version' );
+		}
+		$previous_is_pre_addon_framework = ! empty( $previous_version ) && version_compare( $previous_version, '2.0.dev1', '<' );
 
 		if ( $previous_is_pre_addon_framework ) {
 
@@ -1970,7 +2016,10 @@ class GFPayPal extends GFPaymentAddOn {
 		//copy transactions from the paypal transaction table to the add payment transaction table
 		global $wpdb;
 		$old_table_name = $this->get_old_transaction_table_name();
-		$this->log_debug( 'Copying old PayPal transactions into new table structure.' );
+		if ( ! $this->table_exists( $old_table_name ) ) {
+			return false;
+		}
+		$this->log_debug( __METHOD__ . '(): Copying old PayPal transactions into new table structure.' );
 
 		$new_table_name = $this->get_new_transaction_table_name();
 		
@@ -1979,7 +2028,7 @@ class GFPayPal extends GFPaymentAddOn {
 
 		$wpdb->query( $sql );
 
-		$this->log_debug( "transactions: {$wpdb->rows_affected} rows were added." );
+		$this->log_debug( __METHOD__ . "(): transactions: {$wpdb->rows_affected} rows were added." );
 	}
 	
 	public function get_old_transaction_table_name(){
@@ -1996,20 +2045,24 @@ class GFPayPal extends GFPaymentAddOn {
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'rg_paypal';
 
+		if ( ! $this->table_exists( $table_name ) ) {
+			return false;
+		}
+
 		$form_table_name = GFFormsModel::get_form_table_name();
 		$sql     = "SELECT s.id, s.is_active, s.form_id, s.meta, f.title as form_title
 					FROM {$table_name} s
 					INNER JOIN {$form_table_name} f ON s.form_id = f.id";
 
-		$this->log_debug( "getting old feeds: {$sql}" );
+		$this->log_debug( __METHOD__ . "(): getting old feeds: {$sql}" );
 
 		$results = $wpdb->get_results( $sql, ARRAY_A );
 
-		$this->log_debug( "error?: {$wpdb->last_error}" );
+		$this->log_debug( __METHOD__ . "(): error?: {$wpdb->last_error}" );
 
 		$count = sizeof( $results );
 
-		$this->log_debug( "count: {$count}" );
+		$this->log_debug( __METHOD__ . "(): count: {$count}" );
 
 		for ( $i = 0; $i < $count; $i ++ ) {
 			$results[ $i ]['meta'] = maybe_unserialize( $results[ $i ]['meta'] );

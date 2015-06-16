@@ -1,6 +1,30 @@
-------------------------------------------------------------
-Version 2.3.1
-	- Updated database upgrade routine to remove redundant code that ensured feeds were copied over. Root of the issue was fixed in Gravity Forms core.
+---------------------------------------------------------------------
+Version 2.4.3
+    - Fixed an issue with the upgrade routine which caused it run even if a pre-framework version hadn't been installed.
+
+---------------------------------------------------------------------
+Version 2.4.2
+    - Updated max values for the billing cycle and trial period drop downs. D = 90, W = 52, M = 24, Y = 5.
+
+---------------------------------------------------------------------
+Version 2.4.1
+    - Updated logging to show when IPN processing is aborted due to the entry being marked as spam.
+
+---------------------------------------------------------------------
+Version 2.4
+    - Added gform_paypal_return_url_port hook to allow the port to be changed for the return_url
+    	add_filter( 'gform_paypal_return_url_port', 'change_port' );
+		function change_port(){
+		  return '81';
+		}
+    - Updated logging statements.
+    - Updated database upgrade routine to remove redundant code that ensured feeds were copied over. Root of the issue was fixed in Gravity Forms core.
+    - Fixed a low severity security vulnerability in the admin area which could be exploited by authenticated users with form administration permissions.
+    - Fixed an issue with IPN processing which could cause the duplicate callback check to prevent the entry being updated for some transactions.
+	- Fixed issue on IPN processing that could potentially prevent PayPal from re-trying failed IPNs on certain scenarios.
+    - Fixed an issue with the delay notifications list on the feed including notifications from all events instead of just the form_submission event.
+	- Fixed deprecation notices related to getting the country and us state codes in Gravity Forms 1.9.
+	- Fixed a fatal error if GFAPI::get_entry returned a WP_Error object during IPN validation.
 
 ------------------------------------------------------------
 Version 2.3
