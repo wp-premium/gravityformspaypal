@@ -1,14 +1,30 @@
 ---------------------------------------------------------------------
-Version 2.4.3
-    - Fixed an issue with the upgrade routine which caused it run even if a pre-framework version hadn't been installed.
+Version 2.5.3
+    - Fixed an issue in redirect_url() where the entry currency was not being used.
 
 ---------------------------------------------------------------------
-Version 2.4.2
+Version 2.5.2
+    - Added the gform_paypal_sslverify filter to allow sslverify be modified before sending requests.
+    Example - turn off SSL verification:
+        add_filter( 'gform_paypal_sslverify', '__return_false' );
+    - Updated the installation process to activate sslverify by default for all new installations.
+
+---------------------------------------------------------------------
+Version 2.5.1
+    - Fixed a fatal error which could occur if the IPN request check added in v2.5 returned a WP_Error object.
+
+---------------------------------------------------------------------
+Version 2.5
+	- Added IPN request check to try to detect incompatibility between webserver and new PayPal SSL standards
+	- Added filter to allow return url to be changed in cases where proxy prevents it from being created correctly.
+    - Added $submission_data as the fifth parameter of the gform_paypal_query and gform_paypal_request filters.
+    - Updated $form parameter on 'gform_paypal_get_payment_feed' hook to always pass a form object even if one is not provided to the parent function
+    - Updated entry detail page to allow editing of payment details when original status is Processing or Pending.
+    - Updated minimum Gravity Forms version to 1.9.3.
     - Updated max values for the billing cycle and trial period drop downs. D = 90, W = 52, M = 24, Y = 5.
-
----------------------------------------------------------------------
-Version 2.4.1
     - Updated logging to show when IPN processing is aborted due to the entry being marked as spam.
+    - Fixed an issue with IPN validation if the PayPal response body did not contain VERIFIED or INVALID.
+    - Fixed an issue with the upgrade routine which caused it run even if a pre-framework version hadn't been installed.
 
 ---------------------------------------------------------------------
 Version 2.4

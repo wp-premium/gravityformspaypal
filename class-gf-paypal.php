@@ -7,7 +7,7 @@ GFForms::include_payment_addon_framework();
 class GFPayPal extends GFPaymentAddOn {
 
 	protected $_version = GF_PAYPAL_VERSION;
-	protected $_min_gravityforms_version = '1.8.12';
+	protected $_min_gravityforms_version = '1.9.3';
 	protected $_slug = 'gravityformspaypal';
 	protected $_path = 'gravityformspaypal/paypal.php';
 	protected $_full_path = __FILE__;
@@ -49,7 +49,6 @@ class GFPayPal extends GFPaymentAddOn {
 		add_filter( 'gform_disable_notification', array( $this, 'delay_notification' ), 10, 4 );
 	}
 
-
 	//----- SETTINGS PAGES ----------//
 
 	public function plugin_settings_fields() {
@@ -87,12 +86,11 @@ class GFPayPal extends GFPaymentAddOn {
 		);
 	}
 
-	public function feed_list_no_item_message(){
+	public function feed_list_no_item_message() {
 		$settings = $this->get_plugin_settings();
-		if ( ! rgar( $settings, 'gf_paypal_configured' ) ){
+		if ( ! rgar( $settings, 'gf_paypal_configured' ) ) {
 			return sprintf( __( 'To get started, let\'s go configure your %sPayPal Settings%s!', 'gravityformspaypal' ), '<a href="' . admin_url( 'admin.php?page=gf_settings&subview=' . $this->_slug ) . '">', '</a>' );
-		}
-		else {
+		} else {
 			return parent::feed_list_no_item_message();
 		}
 	}
@@ -272,6 +270,12 @@ class GFPayPal extends GFPaymentAddOn {
 
 		//-----------------------------------------------------------------------------------------------------
 
+		/**
+		 * Filter through the feed settings fields for the Paypal feed
+		 *
+		 * @param array $default_settings The Default feed settings
+		 * @param array $form The Form object to filter through
+		 */
 		return apply_filters( 'gform_paypal_feed_settings_fields', $default_settings, $form );
 	}
 
@@ -504,14 +508,55 @@ class GFPayPal extends GFPaymentAddOn {
 			//fail save
 			return false;
 		}
-		
-		$settings     = $feed['meta'];
+
+		$settings = $feed['meta'];
 		
 		//--------------------------------------------------------
 
 		return parent::save_feed_settings( $feed_id, $form_id, $settings );
 	}
 
+	public function check_ipn_request() {
+
+		$dismiss = isset( $_GET['dismiss_ipn_check'] );
+		if ( $dismiss ) {
+			add_option( 'dismiss_ipn_check', 1 );
+		}
+
+		if ( get_option( 'dismiss_ipn_check' ) ) {
+			return;
+		}
+
+		$can_verify_ipn = get_option( 'can_verify_ipn' );
+		if ( $can_verify_ipn == 'yes' ) {
+			return;
+		}
+
+		if ( empty( $can_verify_ipn ) ) {
+
+			$url = 'https://www.sandbox.paypal.com/cgi-bin/webscr/';
+			$request  = new WP_Http();
+			$response = $request->post( $url, array( 'httpversion' => '1.1', 'sslverify' => false, 'ssl' => true, 'body' => 'cmd=_notify-validate', 'timeout' => 20 ) );
+
+			if ( ! is_wp_error( $response ) && rgar( $response, 'body' ) == 'INVALID' ) {
+
+				$can_verify_ipn = 'yes';
+			} else {
+
+				wp_mail( get_bloginfo( 'admin_email' ), 'Immediate Action Required: SSL certificate is outdated', 'WARNING: Your web server does not currently support the SHA-2 SSL Certificate standard required by PayPal.  <a href="https://devblog.paypal.com/paypal-ssl-certificate-changes/">For details see PayPal\'s changeover announcement</a>. Please contact your web host to resolve this issue as soon as possible.' );
+				$can_verify_ipn = 'no';
+			}
+
+			update_option( 'can_verify_ipn', $can_verify_ipn );
+		}
+
+		if ( $can_verify_ipn == 'no' ) {
+
+			//display message
+			echo '<div class="error"> <p><strong>WARNING:</strong> Your web server does not currently support the SHA-2 SSL Certificate standard required by PayPal.  <a href="https://devblog.paypal.com/paypal-ssl-certificate-changes/">For details see PayPal\'s changeover announcement</a>. Please contact your web host to resolve this issue as soon as possible. <a href="' . add_query_arg( array( 'dismiss_ipn_check' => 1 ) ) . '">Dismiss</a></p></div>';
+
+		}
+	}
 
 	//------ SENDING TO PAYPAL -----------//
 
@@ -533,7 +578,7 @@ class GFPayPal extends GFPaymentAddOn {
 		$invoice = empty( $invoice_id ) ? '' : "&invoice={$invoice_id}";
 
 		//Current Currency
-		$currency = GFCommon::get_currency();
+		$currency = rgar( $entry, 'currency' );
 
 		//Customer fields
 		$customer_fields = $this->customer_query_string( $feed, $entry );
@@ -582,7 +627,7 @@ class GFPayPal extends GFPaymentAddOn {
 				break;
 		}
 
-		$query_string = apply_filters( "gform_paypal_query_{$form['id']}", apply_filters( 'gform_paypal_query', $query_string, $form, $entry, $feed ), $form, $entry, $feed );
+		$query_string = gf_apply_filters( 'gform_paypal_query', $form['id'], $query_string, $form, $entry, $feed, $submission_data );
 
 		if ( ! $query_string ) {
 			$this->log_debug( __METHOD__ . '(): NOT sending to PayPal: The price is either zero or the gform_paypal_query filter was used to remove the querystring that is sent to PayPal.' );
@@ -592,7 +637,7 @@ class GFPayPal extends GFPaymentAddOn {
 
 		$url .= $query_string;
 
-		$url = apply_filters( "gform_paypal_request_{$form['id']}", apply_filters( 'gform_paypal_request', $url, $form, $entry, $feed ), $form, $entry, $feed );
+		$url = gf_apply_filters( 'gform_paypal_request', $form['id'], $url, $form, $entry, $feed, $submission_data );
 		
 		//add the bn code (build notation code)
 		$url .= '&bn=Rocketgenius_SP';
@@ -835,11 +880,11 @@ class GFPayPal extends GFPaymentAddOn {
 
 	}
 
-	public function customer_query_string( $feed, $lead ) {
+	public function customer_query_string( $feed, $entry ) {
 		$fields = '';
 		foreach ( $this->get_customer_fields() as $field ) {
 			$field_id = $feed['meta'][ $field['meta_name'] ];
-			$value    = rgar( $lead, $field_id );
+			$value    = rgar( $entry, $field_id );
 
 			if ( $field['name'] == 'country' ) {
 				$value = class_exists( 'GF_Field_Address' ) ? GF_Fields::get( 'address' )->get_country_code( $value ) : GFCommon::get_country_code( $value );
@@ -869,7 +914,22 @@ class GFPayPal extends GFPaymentAddOn {
 		$ids_query = "ids={$form_id}|{$lead_id}";
 		$ids_query .= '&hash=' . wp_hash( $ids_query );
 
-		return add_query_arg( 'gf_paypal_return', base64_encode( $ids_query ), $pageURL );
+		$url = add_query_arg( 'gf_paypal_return', base64_encode( $ids_query ), $pageURL );
+
+		$query = 'gf_paypal_return=' . base64_encode( $ids_query );
+		/**
+		 * Filters PayPal's return URL, which is the URL that users will be sent to after completing the payment on PayPal's site.
+		 * Useful when URL isn't created correctly (could happen on some server configurations using PROXY servers).
+		 *
+		 * @since 2.4.5
+		 *
+		 * @param string  $url 	The URL to be filtered.
+		 * @param int $form_id	The ID of the form being submitted.
+		 * @param int $entry_id	The ID of the entry that was just created.
+		 * @param string $query	The query string portion of the URL.
+		 */
+		return apply_filters( 'gform_paypal_return_url', $url, $form_id, $lead_id, $query  );
+
 	}
 
 	public static function maybe_thankyou_page() {
@@ -972,22 +1032,22 @@ class GFPayPal extends GFPaymentAddOn {
 
 	public function delay_post( $is_disabled, $form, $entry ) {
 
-		$feed = $this->get_payment_feed( $entry );
+		$feed            = $this->get_payment_feed( $entry );
 		$submission_data = $this->get_submission_data( $feed, $form, $entry );
 
-		if ( ! $feed || empty( $submission_data['payment_amount'] ) ){
+		if ( ! $feed || empty( $submission_data['payment_amount'] ) ) {
 			return $is_disabled;
 		}
 
 		return ! rgempty( 'delayPost', $feed['meta'] );
 	}
 
-	public function delay_notification( $is_disabled, $notification, $form, $entry ){
+	public function delay_notification( $is_disabled, $notification, $form, $entry ) {
 
-		$feed = $this->get_payment_feed( $entry );
+		$feed            = $this->get_payment_feed( $entry );
 		$submission_data = $this->get_submission_data( $feed, $form, $entry );
 
-		if ( ! $feed || empty( $submission_data['payment_amount'] ) ){
+		if ( ! $feed || empty( $submission_data['payment_amount'] ) ) {
 			return $is_disabled;
 		}
 
@@ -1010,12 +1070,13 @@ class GFPayPal extends GFPaymentAddOn {
 
 		//------- Send request to paypal and verify it has not been spoofed ---------------------//
 		$is_verified = $this->verify_paypal_ipn();
-		if ( is_wp_error( $is_verified ) ){
+		if ( is_wp_error( $is_verified ) ) {
 			$this->log_error( __METHOD__ . '(): IPN verification failed with an error. Aborting with a 500 error so that IPN is resent.' );
+
 			return new WP_Error( 'IPNVerificationError', 'There was an error when verifying the IPN message with PayPal', array( 'status_header' => 500 ) );
-		}
-		else if ( ! $is_verified ){
+		} elseif ( ! $is_verified ) {
 			$this->log_error( __METHOD__ . '(): IPN request could not be verified by PayPal. Aborting.' );
+
 			return false;
 		}
 
@@ -1073,16 +1134,16 @@ class GFPayPal extends GFPaymentAddOn {
 
 	}
 
-	public function get_payment_feed( $entry, $form = false ){
+	public function get_payment_feed( $entry, $form = false ) {
 
 		$feed = parent::get_payment_feed( $entry, $form );
 
-		if ( empty( $feed ) && ! empty($entry['id']) ){
+		if ( empty( $feed ) && ! empty( $entry['id'] ) ) {
 			//looking for feed created by legacy versions
 			$feed = $this->get_paypal_feed_by_entry( $entry['id'] );
 		}
 
-		$feed = apply_filters( 'gform_paypal_get_payment_feed', $feed, $entry, $form );
+		$feed = apply_filters( 'gform_paypal_get_payment_feed', $feed, $entry, $form ? $form : GFAPI::get_form( $entry['form_id'] ) );
 
 		return $feed;
 	}
@@ -1090,13 +1151,13 @@ class GFPayPal extends GFPaymentAddOn {
 	private function get_paypal_feed_by_entry( $entry_id ) {
 
 		$feed_id = gform_get_meta( $entry_id, 'paypal_feed_id' );
-		$feed = $this->get_feed( $feed_id );
+		$feed    = $this->get_feed( $feed_id );
 
 		return ! empty( $feed ) ? $feed : false;
 	}
 
 	public function post_callback( $callback_action, $callback_result ) {
-		if ( is_wp_error( $callback_action ) || ! $callback_action ){
+		if ( is_wp_error( $callback_action ) || ! $callback_action ) {
 			return false;
 		}
 
@@ -1115,12 +1176,10 @@ class GFPayPal extends GFPaymentAddOn {
 		//run gform_paypal_fulfillment only in certain conditions
 		if ( rgar( $callback_action, 'ready_to_fulfill' ) && ! rgar( $callback_action, 'abort_callback' ) ) {
 			$this->fulfill_order( $entry, $transaction_id, $amount, $feed );
-		} 
-		else {
-			if ( rgar( $callback_action, 'abort_callback' ) ){
+		} else {
+			if ( rgar( $callback_action, 'abort_callback' ) ) {
 				$this->log_debug( __METHOD__ . '(): Callback processing was aborted. Not fulfilling entry.' );
-			}
-			else {
+			} else {
 				$this->log_debug( __METHOD__ . '(): Entry is already fulfilled or not ready to be fulfilled, not running gform_paypal_fulfillment hook.' );
 			}
 		}
@@ -1149,7 +1208,7 @@ class GFPayPal extends GFPaymentAddOn {
 			$req .= "&$key=$value";
 		}
 
-		$url = rgpost( 'test_ipn' ) ? $this->sandbox_url : $this->production_url;
+		$url = rgpost( 'test_ipn' ) ? $this->sandbox_url : apply_filters( 'gform_paypal_ipn_url', $this->production_url );
 
 		$this->log_debug( __METHOD__ . "(): Sending IPN request to PayPal for validation. URL: $url - Data: $req" );
 
@@ -1158,14 +1217,28 @@ class GFPayPal extends GFPaymentAddOn {
 		//Post back to PayPal system to validate
 		$request  = new WP_Http();
 		$headers  = array( 'Host' => $url_info['host'] );
-		$response = $request->post( $url, array( 'httpversion' => '1.1', 'headers' => $headers, 'sslverify' => false, 'ssl' => true, 'body' => $req, 'timeout' => 20 ) );
+		$sslverify = (bool) get_option( 'gform_paypal_sslverify' );
+
+		/**
+		 * Allow sslverify be modified before sending requests
+		 *
+		 * @since 2.5.1
+		 *
+		 * @param bool $sslverify Whether to verify SSL for the request. Default true for new installations, false for legacy installations.
+		 */
+		$sslverify = apply_filters( 'gform_paypal_sslverify', $sslverify );
+		$this->log_debug( __METHOD__ . '(): sslverify: ' . $sslverify );
+		$response = $request->post( $url, array( 'httpversion' => '1.1', 'headers' => $headers, 'sslverify' => $sslverify, 'ssl' => true, 'body' => $req, 'timeout' => 20 ) );
 		$this->log_debug( __METHOD__ . '(): Response: ' . print_r( $response, true ) );
 
-		if ( is_wp_error( $response ) ){
+		$body = trim( $response['body'] );
+		if ( is_wp_error( $response ) ) {
 			return $response;
+		} elseif ( ! in_array( $body, array( 'VERIFIED', 'INVALID' ) ) ) {
+			return new WP_Error( 'IPNVerificationError', 'Unexpected content in the response body.' );
 		}
 
-		return trim( $response['body'] ) == 'VERIFIED';
+		return $body == 'VERIFIED';
 
 	}
 
@@ -1385,7 +1458,13 @@ class GFPayPal extends GFPaymentAddOn {
 			return false;
 		}
 
-		//Check business email to make sure it matches
+		/**
+		 * Filter through your Paypal business email (Checks to make sure it matches)
+		 *
+		 * @param string $feed['meta']['paypalEmail'] The Paypal Email to filter through (Taken from the feed object under feed meta)
+		 * @param array $feed The Feed object to filter through and use for modifications
+		 * @param array $entry The Entry Object to filter through and use for modifications
+		 */
 		$business_email = apply_filters( 'gform_paypal_business_email', $feed['meta']['paypalEmail'], $feed, $entry );
 
 		$recipient_email = rgempty( 'business' ) ? rgpost( 'receiver_email' ) : rgpost( 'business' );
@@ -1424,7 +1503,7 @@ class GFPayPal extends GFPaymentAddOn {
 
 		$result = false;
 
-		if ( ! $post_id ){
+		if ( ! $post_id ) {
 			return $result;
 		}
 
@@ -1525,7 +1604,7 @@ class GFPayPal extends GFPaymentAddOn {
 
 	//------- AJAX FUNCTIONS ------------------//
 
-	public function init_ajax(){
+	public function init_ajax() {
 
 		parent::init_ajax();
 
@@ -1541,39 +1620,34 @@ class GFPayPal extends GFPaymentAddOn {
 
 		//add actions to allow the payment status to be modified
 		add_action( 'gform_payment_status', array( $this, 'admin_edit_payment_status' ), 3, 3 );
-
-		if ( version_compare( GFCommon::$version, '1.8.17.4', '<' ) ){
-			//using legacy hook
-			add_action( 'gform_entry_info', array( $this, 'admin_edit_payment_status_details' ), 4, 2 );
-		}
-		else {
-			add_action( 'gform_payment_date', array( $this, 'admin_edit_payment_date' ), 3, 3 );
-			add_action( 'gform_payment_transaction_id', array( $this, 'admin_edit_payment_transaction_id' ), 3, 3 );
-			add_action( 'gform_payment_amount', array( $this, 'admin_edit_payment_amount' ), 3, 3 );
-		}
-
+		add_action( 'gform_payment_date', array( $this, 'admin_edit_payment_date' ), 3, 3 );
+		add_action( 'gform_payment_transaction_id', array( $this, 'admin_edit_payment_transaction_id' ), 3, 3 );
+		add_action( 'gform_payment_amount', array( $this, 'admin_edit_payment_amount' ), 3, 3 );
 		add_action( 'gform_after_update_entry', array( $this, 'admin_update_payment' ), 4, 2 );
 
 		add_filter( 'gform_addon_navigation', array( $this, 'maybe_create_menu' ) );
+
+		//checking if webserver is compatible with PayPal SSL certificate
+		add_action( 'admin_notices', array( $this, 'check_ipn_request' ) );
 	}
 
-	public function maybe_create_menu( $menus ){
+	public function maybe_create_menu( $menus ) {
 		$current_user = wp_get_current_user();
 		$dismiss_paypal_menu = get_metadata( 'user', $current_user->ID, 'dismiss_paypal_menu', true );
-		if ( $dismiss_paypal_menu != '1' ){
+		if ( $dismiss_paypal_menu != '1' ) {
 			$menus[] = array( 'name' => $this->_slug, 'label' => $this->get_short_title(), 'callback' => array( $this, 'temporary_plugin_page' ), 'permission' => $this->_capabilities_form_settings );
 		}
 
 		return $menus;
 	}
 
-	public function ajax_dismiss_menu(){
+	public function ajax_dismiss_menu() {
 
 		$current_user = wp_get_current_user();
 		update_metadata( 'user', $current_user->ID, 'dismiss_paypal_menu', '1' );
 	}
 
-	public function temporary_plugin_page(){
+	public function temporary_plugin_page() {
 		$current_user = wp_get_current_user();
 		?>
 		<script type="text/javascript">
@@ -1618,9 +1692,8 @@ class GFPayPal extends GFPaymentAddOn {
 		<?php
 	}
 
-	public function admin_edit_payment_status( $payment_status, $form, $lead ) {
-		//allow the payment status to be edited when for paypal, not set to Approved/Paid, and not a subscription
-		if ( ! $this->is_payment_gateway( $lead['id'] ) || strtolower( rgpost( 'save' ) ) <> 'edit' || $payment_status == 'Approved' || $payment_status == 'Paid' || rgar( $lead, 'transaction_type' ) == 2 ) {
+	public function admin_edit_payment_status( $payment_status, $form, $entry ) {
+		if ( $this->payment_details_editing_disabled( $entry ) ) {
 			return $payment_status;
 		}
 
@@ -1634,13 +1707,12 @@ class GFPayPal extends GFPaymentAddOn {
 		return $payment_string;
 	}
 
-	public function admin_edit_payment_date( $payment_date, $form, $lead ) {
-		//allow the payment status to be edited when for paypal, not set to Approved/Paid, and not a subscription
-		if ( ! $this->is_payment_gateway( $lead['id'] ) || strtolower( rgpost( 'save' ) ) <> 'edit' ) {
+	public function admin_edit_payment_date( $payment_date, $form, $entry ) {
+		if ( $this->payment_details_editing_disabled( $entry ) ) {
 			return $payment_date;
 		}
 
-		$payment_date = $lead['payment_date'];
+		$payment_date = $entry['payment_date'];
 		if ( empty( $payment_date ) ) {
 			$payment_date = gmdate( 'y-m-d H:i:s' );
 		}
@@ -1650,9 +1722,8 @@ class GFPayPal extends GFPaymentAddOn {
 		return $input;
 	}
 
-	public function admin_edit_payment_transaction_id( $transaction_id, $form, $lead ) {
-		//allow the payment status to be edited when for paypal, not set to Approved/Paid, and not a subscription
-		if ( ! $this->is_payment_gateway( $lead['id'] ) || strtolower( rgpost( 'save' ) ) <> 'edit' ) {
+	public function admin_edit_payment_transaction_id( $transaction_id, $form, $entry ) {
+		if ( $this->payment_details_editing_disabled( $entry ) ) {
 			return $transaction_id;
 		}
 
@@ -1661,15 +1732,13 @@ class GFPayPal extends GFPaymentAddOn {
 		return $input;
 	}
 
-	public function admin_edit_payment_amount( $payment_amount, $form, $lead ) {
-
-		//allow the payment status to be edited when for paypal, not set to Approved/Paid, and not a subscription
-		if ( ! $this->is_payment_gateway( $lead['id'] ) || strtolower( rgpost( 'save' ) ) <> 'edit' ) {
+	public function admin_edit_payment_amount( $payment_amount, $form, $entry ) {
+		if ( $this->payment_details_editing_disabled( $entry ) ) {
 			return $payment_amount;
 		}
 
 		if ( empty( $payment_amount ) ) {
-			$payment_amount = GFCommon::get_order_total( $form, $lead );
+			$payment_amount = GFCommon::get_order_total( $form, $entry );
 		}
 
 		$input = '<input type="text" id="payment_amount" name="payment_amount" class="gform_currency" value="' . $payment_amount . '">';
@@ -1677,77 +1746,21 @@ class GFPayPal extends GFPaymentAddOn {
 		return $input;
 	}
 
-
-	public function admin_edit_payment_status_details( $form_id, $lead ) {
-
-		$form_action = strtolower( rgpost( 'save' ) );
-		if ( ! $this->is_payment_gateway( $lead['id'] ) || $form_action <> 'edit' ) {
-			return;
-		}
-
-		//get data from entry to pre-populate fields
-		$payment_amount = rgar( $lead, 'payment_amount' );
-		if ( empty( $payment_amount ) ) {
-			$form           = GFFormsModel::get_form_meta( $form_id );
-			$payment_amount = GFCommon::get_order_total( $form, $lead );
-		}
-		$transaction_id = rgar( $lead, 'transaction_id' );
-		$payment_date   = rgar( $lead, 'payment_date' );
-		if ( empty( $payment_date ) ) {
-			$payment_date = gmdate( 'y-m-d H:i:s' );
-		}
-
-		//display edit fields
-		?>
-		<div id="edit_payment_status_details" style="display:block">
-			<table>
-				<tr>
-					<td colspan="2"><strong>Payment Information</strong></td>
-				</tr>
-
-				<tr>
-					<td>Date:<?php gform_tooltip( 'paypal_edit_payment_date' ) ?></td>
-					<td>
-						<input type="text" id="payment_date" name="payment_date" value="<?php echo $payment_date ?>">
-					</td>
-				</tr>
-				<tr>
-					<td>Amount:<?php gform_tooltip( 'paypal_edit_payment_amount' ) ?></td>
-					<td>
-						<input type="text" id="payment_amount" name="payment_amount" class="gform_currency" value="<?php echo $payment_amount ?>">
-					</td>
-				</tr>
-				<tr>
-					<td nowrap>Transaction ID:<?php gform_tooltip( 'paypal_edit_payment_transaction_id' ) ?></td>
-					<td>
-						<input type="text" id="paypal_transaction_id" name="paypal_transaction_id" value="<?php echo $transaction_id ?>">
-					</td>
-				</tr>
-			</table>
-		</div>
-	<?php
-	}
-
-	public function admin_update_payment( $form, $lead_id ) {
+	public function admin_update_payment( $form, $entry_id ) {
 		check_admin_referer( 'gforms_save_entry', 'gforms_save_entry' );
 
 		//update payment information in admin, need to use this function so the lead data is updated before displayed in the sidebar info section
-		$form_action = strtolower( rgpost( 'save' ) );
-		if ( ! $this->is_payment_gateway( $lead_id ) || $form_action <> 'update' ) {
+		$entry = GFFormsModel::get_lead( $entry_id );
+
+		if ( $this->payment_details_editing_disabled( $entry, 'update' ) ) {
 			return;
 		}
-		//get lead
-		$lead = GFFormsModel::get_lead( $lead_id );
-        
-        //check if current payment status is processing
-        if($lead['payment_status'] != 'Processing')
-            return;
         
 		//get payment fields to update
 		$payment_status = rgpost( 'payment_status' );
 		//when updating, payment status may not be editable, if no value in post, set to lead payment status
 		if ( empty( $payment_status ) ) {
-			$payment_status = $lead['payment_status'];
+			$payment_status = $entry['payment_status'];
 		}
 
 		$payment_amount      = GFCommon::to_number( rgpost( 'payment_amount' ) );
@@ -1768,25 +1781,25 @@ class GFPayPal extends GFPaymentAddOn {
 			$user_name = $user_data->display_name;
 		}
 
-		$lead['payment_status'] = $payment_status;
-		$lead['payment_amount'] = $payment_amount;
-		$lead['payment_date']   = $payment_date;
-		$lead['transaction_id'] = $payment_transaction;
+		$entry['payment_status'] = $payment_status;
+		$entry['payment_amount'] = $payment_amount;
+		$entry['payment_date']   = $payment_date;
+		$entry['transaction_id'] = $payment_transaction;
 
 		// if payment status does not equal approved/paid or the lead has already been fulfilled, do not continue with fulfillment
-		if ( ( $payment_status == 'Approved' || $payment_status == 'Paid' ) && ! $lead['is_fulfilled'] ) {
-			$action['id']               = $payment_transaction;
-			$action['type']             = 'complete_payment';
-			$action['transaction_id']   = $payment_transaction;
-			$action['amount']           = $payment_amount;
-			$action['entry_id']         = $lead['id'];
+		if ( ( $payment_status == 'Approved' || $payment_status == 'Paid' ) && ! $entry['is_fulfilled'] ) {
+			$action['id']             = $payment_transaction;
+			$action['type']           = 'complete_payment';
+			$action['transaction_id'] = $payment_transaction;
+			$action['amount']         = $payment_amount;
+			$action['entry_id']       = $entry['id'];
 
-			$this->complete_payment( $lead, $action );
-			$this->fulfill_order( $lead, $payment_transaction, $payment_amount );
+			$this->complete_payment( $entry, $action );
+			$this->fulfill_order( $entry, $payment_transaction, $payment_amount );
 		}
 		//update lead, add a note
-		GFAPI::update_entry( $lead );
-		GFFormsModel::add_note( $lead['id'], $user_id, $user_name, sprintf( __( 'Payment information was manually updated. Status: %s. Amount: %s. Transaction Id: %s. Date: %s', 'gravityformspaypal' ), $lead['payment_status'], GFCommon::to_money( $lead['payment_amount'], $lead['currency'] ), $payment_transaction, $lead['payment_date'] ) );
+		GFAPI::update_entry( $entry );
+		GFFormsModel::add_note( $entry['id'], $user_id, $user_name, sprintf( __( 'Payment information was manually updated. Status: %s. Amount: %s. Transaction Id: %s. Date: %s', 'gravityformspaypal' ), $entry['payment_status'], GFCommon::to_money( $entry['payment_amount'], $entry['currency'] ), $payment_transaction, $entry['payment_date'] ) );
 	}
 
 	public function fulfill_order( &$entry, $transaction_id, $amount, $feed = null ) {
@@ -1815,20 +1828,20 @@ class GFPayPal extends GFPaymentAddOn {
 
 	}
 
-	private function is_valid_initial_payment_amount( $entry_id, $amount_paid ){
+	private function is_valid_initial_payment_amount( $entry_id, $amount_paid ) {
 
 		//get amount initially sent to paypal
 		$amount_sent = gform_get_meta( $entry_id, 'payment_amount' );
-		if ( empty( $amount_sent ) ){
+		if ( empty( $amount_sent ) ) {
 			return true;
 		}
 
-		$epsilon = 0.00001;
-		$is_equal = abs( floatval( $amount_paid ) - floatval( $amount_sent ) ) < $epsilon;
+		$epsilon    = 0.00001;
+		$is_equal   = abs( floatval( $amount_paid ) - floatval( $amount_sent ) ) < $epsilon;
 		$is_greater = floatval( $amount_paid ) > floatval( $amount_sent );
 
 		//initial payment is valid if it is equal to or greater than product/subscription amount
-		if ( $is_equal || $is_greater ){
+		if ( $is_equal || $is_greater ) {
 			return true;
 		}
 
@@ -1841,13 +1854,39 @@ class GFPayPal extends GFPaymentAddOn {
 		return false;
 	}
 
-	//------ FOR BACKWARDS COMPATIBILITY ----------------------//
+	/**
+	 * Editing of the payment details should only be possible if the entry was processed by PayPal, if the payment status is Pending or Processing, and the transaction was not a subscription.
+	 *
+	 * @param array $entry The current entry
+	 * @param string $action The entry detail page action, edit or update.
+	 *
+	 * @return bool
+	 */
+	public function payment_details_editing_disabled( $entry, $action = 'edit' ) {
+		$payment_status = rgar( $entry, 'payment_status' );
+		$form_action    = strtolower( rgpost( 'save' ) );
 
-	//Change data when upgrading from legacy paypal
+		return ! $this->is_payment_gateway( $entry['id'] ) || $form_action <> $action || $payment_status == 'Approved' || $payment_status == 'Paid' || rgar( $entry, 'transaction_type' ) == 2;
+
+	}
+
+	/**
+	 * Activate sslverify by default for new installations.
+	 *
+	 * Transform data when upgrading from legacy paypal.
+	 *
+	 * @param $previous_version
+	 */
 	public function upgrade( $previous_version ) {
+
 		if ( empty( $previous_version ) ) {
 			$previous_version = get_option( 'gf_paypal_version' );
 		}
+
+		if ( empty( $previous_version ) ) {
+			update_option( 'gform_paypal_sslverify', true );
+		}
+
 		$previous_is_pre_addon_framework = ! empty( $previous_version ) && version_compare( $previous_version, '2.0.dev1', '<' );
 
 		if ( $previous_is_pre_addon_framework ) {
@@ -1870,13 +1909,20 @@ class GFPayPal extends GFPaymentAddOn {
 		}
 	}
 
-	public function update_feed_id( $old_feed_id, $new_feed_id ){
+	public function uninstall(){
+		parent::uninstall();
+		delete_option( 'gform_paypal_sslverify' );
+	}
+
+	//------ FOR BACKWARDS COMPATIBILITY ----------------------//
+
+	public function update_feed_id( $old_feed_id, $new_feed_id ) {
 		global $wpdb;
 		$sql = $wpdb->prepare( "UPDATE {$wpdb->prefix}rg_lead_meta SET meta_value=%s WHERE meta_key='paypal_feed_id' AND meta_value=%s", $new_feed_id, $old_feed_id );
 		$wpdb->query( $sql );
 	}
 
-	public function add_legacy_meta( $new_meta, $old_feed ){
+	public function add_legacy_meta( $new_meta, $old_feed ) {
 
 		$known_meta_keys = array(
 								'email', 'mode', 'type', 'style', 'continue_text', 'cancel_url', 'disable_note', 'disable_shipping', 'recurring_amount_field', 'recurring_times',
@@ -1885,8 +1931,8 @@ class GFPayPal extends GFPaymentAddOn {
 								'paypal_conditional_operator', 'paypal_conditional_value', 'customer_fields',
 								);
 
-		foreach ( $old_feed['meta'] as $key => $value ){
-			if ( ! in_array( $key, $known_meta_keys ) ){
+		foreach ( $old_feed['meta'] as $key => $value ) {
+			if ( ! in_array( $key, $known_meta_keys ) ) {
 				$new_meta[ $key ] = $value;
 			}
 		}
@@ -2012,7 +2058,7 @@ class GFPayPal extends GFPaymentAddOn {
 		}
 	}
 
-	public function copy_transactions(){
+	public function copy_transactions() {
 		//copy transactions from the paypal transaction table to the add payment transaction table
 		global $wpdb;
 		$old_table_name = $this->get_old_transaction_table_name();
@@ -2022,8 +2068,8 @@ class GFPayPal extends GFPaymentAddOn {
 		$this->log_debug( __METHOD__ . '(): Copying old PayPal transactions into new table structure.' );
 
 		$new_table_name = $this->get_new_transaction_table_name();
-		
-		$sql	=	"INSERT INTO {$new_table_name} (lead_id, transaction_type, transaction_id, is_recurring, amount, date_created)
+
+		$sql = "INSERT INTO {$new_table_name} (lead_id, transaction_type, transaction_id, is_recurring, amount, date_created)
 					SELECT entry_id, transaction_type, transaction_id, is_renewal, amount, date_created FROM {$old_table_name}";
 
 		$wpdb->query( $sql );
@@ -2031,12 +2077,12 @@ class GFPayPal extends GFPaymentAddOn {
 		$this->log_debug( __METHOD__ . "(): transactions: {$wpdb->rows_affected} rows were added." );
 	}
 	
-	public function get_old_transaction_table_name(){
+	public function get_old_transaction_table_name() {
 		global $wpdb;
 		return $wpdb->prefix . 'rg_paypal_transaction';
 	}
 
-	public function get_new_transaction_table_name(){
+	public function get_new_transaction_table_name() {
 		global $wpdb;
 		return $wpdb->prefix . 'gf_addon_payment_transaction';
 	}
@@ -2050,7 +2096,7 @@ class GFPayPal extends GFPaymentAddOn {
 		}
 
 		$form_table_name = GFFormsModel::get_form_table_name();
-		$sql     = "SELECT s.id, s.is_active, s.form_id, s.meta, f.title as form_title
+		$sql             = "SELECT s.id, s.is_active, s.form_id, s.meta, f.title as form_title
 					FROM {$table_name} s
 					INNER JOIN {$form_table_name} f ON s.form_id = f.id";
 
