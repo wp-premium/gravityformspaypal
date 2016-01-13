@@ -1,13 +1,12 @@
 ---------------------------------------------------------------------
-Version 2.5.3
-    - Fixed an issue in redirect_url() where the entry currency was not being used.
-
----------------------------------------------------------------------
-Version 2.5.2
+Version 2.6
+    - Added support for sending notifications on payment/subscription events. Configured on the edit notification page using the 'Event' setting.
     - Added the gform_paypal_sslverify filter to allow sslverify be modified before sending requests.
-    Example - turn off SSL verification:
-        add_filter( 'gform_paypal_sslverify', '__return_false' );
+        Example - turn off SSL verification:
+            add_filter( 'gform_paypal_sslverify', '__return_false' );
     - Updated the installation process to activate sslverify by default for all new installations.
+    - Updated tooltip and label for the notifications setting on the feed to indicate it only affects notifications for the 'Form is submitted' event.
+    - Fixed an issue in redirect_url() where the entry currency was not being used.
 
 ---------------------------------------------------------------------
 Version 2.5.1

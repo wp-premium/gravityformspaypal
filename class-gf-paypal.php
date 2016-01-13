@@ -54,13 +54,13 @@ class GFPayPal extends GFPaymentAddOn {
 	public function plugin_settings_fields() {
 		$description = '
 			<p style="text-align: left;">' .
-			__( 'Gravity Forms requires IPN to be enabled on your PayPal account. Follow the following steps to confirm IPN is enabled.', 'gravityformspaypal' ) .
+			esc_html__( 'Gravity Forms requires IPN to be enabled on your PayPal account. Follow the following steps to confirm IPN is enabled.', 'gravityformspaypal' ) .
 			'</p>
 			<ul>
-				<li>' . sprintf( __( 'Navigate to your PayPal %sIPN Settings page.%s', 'gravityformspaypal' ), '<a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-ipn-notify" target="_blank">', '</a>' ) . '</li>' .
-			'<li>' . __( 'If IPN is already enabled, you will see your current IPN settings along with a button to turn off IPN. If that is the case, just check the confirmation box below and you are ready to go!', 'gravityformspaypal' ) . '</li>' .
-			'<li>' . __( "If IPN is not enabled, click the 'Choose IPN Settings' button.", 'gravityformspaypal' ) . '</li>' .
-			'<li>' . sprintf( __( 'Click the box to enable IPN and enter the following Notification URL: %s', 'gravityformspaypal' ), '<strong>' . esc_url( add_query_arg( 'page', 'gf_paypal_ipn', get_bloginfo( 'url' ) . '/' ) ) . '</strong>' ) . '</li>' .
+				<li>' . sprintf( esc_html__( 'Navigate to your PayPal %sIPN Settings page.%s', 'gravityformspaypal' ), '<a href="https://www.paypal.com/us/cgi-bin/webscr?cmd=_profile-ipn-notify" target="_blank">', '</a>' ) . '</li>' .
+			'<li>' . esc_html__( 'If IPN is already enabled, you will see your current IPN settings along with a button to turn off IPN. If that is the case, just check the confirmation box below and you are ready to go!', 'gravityformspaypal' ) . '</li>' .
+			'<li>' . esc_html__( "If IPN is not enabled, click the 'Choose IPN Settings' button.", 'gravityformspaypal' ) . '</li>' .
+			'<li>' . sprintf( esc_html__( 'Click the box to enable IPN and enter the following Notification URL: %s', 'gravityformspaypal' ), '<strong>' . esc_url( add_query_arg( 'page', 'gf_paypal_ipn', get_bloginfo( 'url' ) . '/' ) ) . '</strong>' ) . '</li>' .
 			'</ul>
 				<br/>';
 
@@ -71,14 +71,14 @@ class GFPayPal extends GFPaymentAddOn {
 				'fields'      => array(
 					array(
 						'name'    => 'gf_paypal_configured',
-						'label'   => __( 'PayPal IPN Setting', 'gravityformspaypal' ),
+						'label'   => esc_html__( 'PayPal IPN Setting', 'gravityformspaypal' ),
 						'type'    => 'checkbox',
-						'choices' => array( array( 'label' => __( 'Confirm that you have configured your PayPal account to enable IPN', 'gravityformspaypal' ), 'name' => 'gf_paypal_configured' ) )
+						'choices' => array( array( 'label' => esc_html__( 'Confirm that you have configured your PayPal account to enable IPN', 'gravityformspaypal' ), 'name' => 'gf_paypal_configured' ) )
 					),
 					array(
 						'type' => 'save',
 						'messages' => array(
-											'success' => __( 'Settings have been updated.', 'gravityformspaypal' )
+											'success' => esc_html__( 'Settings have been updated.', 'gravityformspaypal' )
 											),
 					),
 				),
@@ -89,7 +89,7 @@ class GFPayPal extends GFPaymentAddOn {
 	public function feed_list_no_item_message() {
 		$settings = $this->get_plugin_settings();
 		if ( ! rgar( $settings, 'gf_paypal_configured' ) ) {
-			return sprintf( __( 'To get started, let\'s go configure your %sPayPal Settings%s!', 'gravityformspaypal' ), '<a href="' . admin_url( 'admin.php?page=gf_settings&subview=' . $this->_slug ) . '">', '</a>' );
+			return sprintf( esc_html__( 'To get started, let\'s go configure your %sPayPal Settings%s!', 'gravityformspaypal' ), '<a href="' . admin_url( 'admin.php?page=gf_settings&subview=' . $this->_slug ) . '">', '</a>' );
 		} else {
 			return parent::feed_list_no_item_message();
 		}
@@ -102,25 +102,25 @@ class GFPayPal extends GFPaymentAddOn {
 		$fields = array(
 			array(
 				'name'     => 'paypalEmail',
-				'label'    => __( 'PayPal Email Address ', 'gravityformspaypal' ),
+				'label'    => esc_html__( 'PayPal Email Address ', 'gravityformspaypal' ),
 				'type'     => 'text',
 				'class'    => 'medium',
 				'required' => true,
-				'tooltip'  => '<h6>' . __( 'PayPal Email Address', 'gravityformspaypal' ) . '</h6>' . __( 'Enter the PayPal email address where payment should be received.', 'gravityformspaypal' )
+				'tooltip'  => '<h6>' . esc_html__( 'PayPal Email Address', 'gravityformspaypal' ) . '</h6>' . esc_html__( 'Enter the PayPal email address where payment should be received.', 'gravityformspaypal' )
 			),
 			array(
 				'name'          => 'mode',
-				'label'         => __( 'Mode', 'gravityformspaypal' ),
+				'label'         => esc_html__( 'Mode', 'gravityformspaypal' ),
 				'type'          => 'radio',
 				'choices'       => array(
-					array( 'id' => 'gf_paypal_mode_production', 'label' => __( 'Production', 'gravityformspaypal' ), 'value' => 'production' ),
-					array( 'id' => 'gf_paypal_mode_test', 'label' => __( 'Test', 'gravityformspaypal' ), 'value' => 'test' ),
+					array( 'id' => 'gf_paypal_mode_production', 'label' => esc_html__( 'Production', 'gravityformspaypal' ), 'value' => 'production' ),
+					array( 'id' => 'gf_paypal_mode_test', 'label' => esc_html__( 'Test', 'gravityformspaypal' ), 'value' => 'test' ),
 
 				),
 
 				'horizontal'    => true,
 				'default_value' => 'production',
-				'tooltip'       => '<h6>' . __( 'Mode', 'gravityformspaypal' ) . '</h6>' . __( 'Select Production to receive live payments. Select Test for testing purposes when using the PayPal development sandbox.', 'gravityformspaypal' )
+				'tooltip'       => '<h6>' . esc_html__( 'Mode', 'gravityformspaypal' ) . '</h6>' . esc_html__( 'Select Production to receive live payments. Select Test for testing purposes when using the PayPal development sandbox.', 'gravityformspaypal' )
 			),
 		);
 
@@ -149,39 +149,39 @@ class GFPayPal extends GFPaymentAddOn {
 		$fields = array(
 			array(
 				'name'     => 'pageStyle',
-				'label'    => __( 'Page Style', 'gravityformspaypal' ),
+				'label'    => esc_html__( 'Page Style', 'gravityformspaypal' ),
 				'type'     => 'text',
 				'class'    => 'medium',
 				'required' => false,
-				'tooltip'  => '<h6>' . __( 'Page Style', 'gravityformspaypal' ) . '</h6>' . __( 'This option allows you to select which PayPal page style should be used if you have setup a custom payment page style with PayPal.', 'gravityformspaypal' )
+				'tooltip'  => '<h6>' . esc_html__( 'Page Style', 'gravityformspaypal' ) . '</h6>' . esc_html__( 'This option allows you to select which PayPal page style should be used if you have setup a custom payment page style with PayPal.', 'gravityformspaypal' )
 			),
 			array(
 				'name'     => 'continueText',
-				'label'    => __( 'Continue Button Label', 'gravityformspaypal' ),
+				'label'    => esc_html__( 'Continue Button Label', 'gravityformspaypal' ),
 				'type'     => 'text',
 				'class'    => 'medium',
 				'required' => false,
-				'tooltip'  => '<h6>' . __( 'Continue Button Label', 'gravityformspaypal' ) . '</h6>' . __( 'Enter the text that should appear on the continue button once payment has been completed via PayPal.', 'gravityformspaypal' )
+				'tooltip'  => '<h6>' . esc_html__( 'Continue Button Label', 'gravityformspaypal' ) . '</h6>' . esc_html__( 'Enter the text that should appear on the continue button once payment has been completed via PayPal.', 'gravityformspaypal' )
 			),
 			array(
 				'name'     => 'cancelUrl',
-				'label'    => __( 'Cancel URL', 'gravityformspaypal' ),
+				'label'    => esc_html__( 'Cancel URL', 'gravityformspaypal' ),
 				'type'     => 'text',
 				'class'    => 'medium',
 				'required' => false,
-				'tooltip'  => '<h6>' . __( 'Cancel URL', 'gravityformspaypal' ) . '</h6>' . __( 'Enter the URL the user should be sent to should they cancel before completing their PayPal payment.', 'gravityformspaypal' )
+				'tooltip'  => '<h6>' . esc_html__( 'Cancel URL', 'gravityformspaypal' ) . '</h6>' . esc_html__( 'Enter the URL the user should be sent to should they cancel before completing their PayPal payment.', 'gravityformspaypal' )
 			),
 			array(
 				'name'    => 'options',
-				'label'   => __( 'Options', 'gravityformspaypal' ),
+				'label'   => esc_html__( 'Options', 'gravityformspaypal' ),
 				'type'    => 'options',
-				'tooltip' => '<h6>' . __( 'Options', 'gravityformspaypal' ) . '</h6>' . __( 'Turn on or off the available PayPal checkout options.', 'gravityformspaypal' )
+				'tooltip' => '<h6>' . esc_html__( 'Options', 'gravityformspaypal' ) . '</h6>' . esc_html__( 'Turn on or off the available PayPal checkout options.', 'gravityformspaypal' )
 			),
 			array(
 				'name'    => 'notifications',
-				'label'   => __( 'Notifications', 'gravityformspaypal' ),
+				'label'   => esc_html__( 'Notifications', 'gravityformspaypal' ),
 				'type'    => 'notifications',
-				'tooltip' => '<h6>' . __( 'Notifications', 'gravityformspaypal' ) . '</h6>' . __( "Enable this option if you would like to only send out this form's notifications after payment has been received. Leaving this option disabled will send notifications immediately after the form is submitted.", 'gravityformspaypal' )
+				'tooltip' => '<h6>' . esc_html__( 'Notifications', 'gravityformspaypal' ) . '</h6>' . esc_html__( "Enable this option if you would like to only send out this form's notifications for the 'Form is submitted' event after payment has been received. Leaving this option disabled will send these notifications immediately after the form is submitted. Notifications which are configured for other events will not be affected by this option.", 'gravityformspaypal' )
 			),
 		);
 
@@ -190,17 +190,17 @@ class GFPayPal extends GFPaymentAddOn {
 		if ( GFCommon::has_post_field( $form['fields'] ) ) {
 			$post_settings = array(
 				'name'    => 'post_checkboxes',
-				'label'   => __( 'Posts', 'gravityformspaypal' ),
+				'label'   => esc_html__( 'Posts', 'gravityformspaypal' ),
 				'type'    => 'checkbox',
-				'tooltip' => '<h6>' . __( 'Posts', 'gravityformspaypal' ) . '</h6>' . __( 'Enable this option if you would like to only create the post after payment has been received.', 'gravityformspaypal' ),
+				'tooltip' => '<h6>' . esc_html__( 'Posts', 'gravityformspaypal' ) . '</h6>' . esc_html__( 'Enable this option if you would like to only create the post after payment has been received.', 'gravityformspaypal' ),
 				'choices' => array(
-					array( 'label' => __( 'Create post only when payment is received.', 'gravityformspaypal' ), 'name' => 'delayPost' ),
+					array( 'label' => esc_html__( 'Create post only when payment is received.', 'gravityformspaypal' ), 'name' => 'delayPost' ),
 				),
 			);
 
 			if ( $this->get_setting( 'transactionType' ) == 'subscription' ) {
 				$post_settings['choices'][] = array(
-					'label'    => __( 'Change post status when subscription is canceled.', 'gravityformspaypal' ),
+					'label'    => esc_html__( 'Change post status when subscription is canceled.', 'gravityformspaypal' ),
 					'name'     => 'change_post_status',
 					'onChange' => 'var action = this.checked ? "draft" : ""; jQuery("#update_post_action").val(action);',
 				);
@@ -235,10 +235,10 @@ class GFPayPal extends GFPaymentAddOn {
 
 		if ( $add_last_name ) {
 			//add last name
-			array_unshift( $billing_info['field_map'], array( 'name' => 'lastName', 'label' => __( 'Last Name', 'gravityformspaypal' ), 'required' => false ) );
+			array_unshift( $billing_info['field_map'], array( 'name' => 'lastName', 'label' => esc_html__( 'Last Name', 'gravityformspaypal' ), 'required' => false ) );
 		}
 		if ( $add_first_name ) {
-			array_unshift( $billing_info['field_map'], array( 'name' => 'firstName', 'label' => __( 'First Name', 'gravityformspaypal' ), 'required' => false ) );
+			array_unshift( $billing_info['field_map'], array( 'name' => 'firstName', 'label' => esc_html__( 'First Name', 'gravityformspaypal' ), 'required' => false ) );
 		}
 		$default_settings = parent::replace_field( 'billingInformation', $billing_info, $default_settings );
 		//----------------------------------------------------------------------------------------------------
@@ -249,10 +249,10 @@ class GFPayPal extends GFPaymentAddOn {
 		//--add trial period
 		$trial_period     = array(
 			'name'    => 'trialPeriod',
-			'label'   => __( 'Trial Period', 'gravityformspaypal' ),
+			'label'   => esc_html__( 'Trial Period', 'gravityformspaypal' ),
 			'type'    => 'trial_period',
 			'hidden'  => ! $this->get_setting( 'trial_enabled' ),
-			'tooltip' => '<h6>' . __( 'Trial Period', 'gravityformspaypal' ) . '</h6>' . __( 'Select the trial period length.', 'gravityformspaypal' )
+			'tooltip' => '<h6>' . esc_html__( 'Trial Period', 'gravityformspaypal' ) . '</h6>' . esc_html__( 'Select the trial period length.', 'gravityformspaypal' )
 		);
 		$default_settings = parent::add_field_after( 'trial', $trial_period, $default_settings );
 		//-----------------------------------------------------------------------------------------
@@ -260,11 +260,11 @@ class GFPayPal extends GFPaymentAddOn {
 		//--Add Try to bill again after failed attempt.
 		$recurring_retry  = array(
 			'name'       => 'recurringRetry',
-			'label'      => __( 'Recurring Retry', 'gravityformspaypal' ),
+			'label'      => esc_html__( 'Recurring Retry', 'gravityformspaypal' ),
 			'type'       => 'checkbox',
 			'horizontal' => true,
-			'choices'    => array( array( 'label' => __( 'Try to bill again after failed attempt.', 'gravityformspaypal' ), 'name' => 'recurringRetry', 'value' => '1' ) ),
-			'tooltip'    => '<h6>' . __( 'Recurring Retry', 'gravityformspaypal' ) . '</h6>' . __( 'Turn on or off whether to try to bill again after failed attempt.', 'gravityformspaypal' )
+			'choices'    => array( array( 'label' => esc_html__( 'Try to bill again after failed attempt.', 'gravityformspaypal' ), 'name' => 'recurringRetry', 'value' => '1' ) ),
+			'tooltip'    => '<h6>' . esc_html__( 'Recurring Retry', 'gravityformspaypal' ) . '</h6>' . esc_html__( 'Turn on or off whether to try to bill again after failed attempt.', 'gravityformspaypal' )
 		);
 		$default_settings = parent::add_field_after( 'recurringTimes', $recurring_retry, $default_settings );
 
@@ -282,17 +282,17 @@ class GFPayPal extends GFPaymentAddOn {
 	public function supported_billing_intervals() {
 
 		$billing_cycles = array(
-			'day'   => array( 'label' => __( 'day(s)', 'gravityformspaypal' ), 'min' => 1, 'max' => 90 ),
-			'week'  => array( 'label' => __( 'week(s)', 'gravityformspaypal' ), 'min' => 1, 'max' => 52 ),
-			'month' => array( 'label' => __( 'month(s)', 'gravityformspaypal' ), 'min' => 1, 'max' => 24 ),
-			'year'  => array( 'label' => __( 'year(s)', 'gravityformspaypal' ), 'min' => 1, 'max' => 5 )
+			'day'   => array( 'label' => esc_html__( 'day(s)', 'gravityformspaypal' ), 'min' => 1, 'max' => 90 ),
+			'week'  => array( 'label' => esc_html__( 'week(s)', 'gravityformspaypal' ), 'min' => 1, 'max' => 52 ),
+			'month' => array( 'label' => esc_html__( 'month(s)', 'gravityformspaypal' ), 'min' => 1, 'max' => 24 ),
+			'year'  => array( 'label' => esc_html__( 'year(s)', 'gravityformspaypal' ), 'min' => 1, 'max' => 5 )
 		);
 
 		return $billing_cycles;
 	}
 
 	public function field_map_title() {
-		return __( 'PayPal Field', 'gravityformspaypal' );
+		return esc_html__( 'PayPal Field', 'gravityformspaypal' );
 	}
 
 	public function settings_trial_period( $field, $echo = true ) {
@@ -327,8 +327,8 @@ class GFPayPal extends GFPaymentAddOn {
 			'name'    => 'options_checkboxes',
 			'type'    => 'checkboxes',
 			'choices' => array(
-				array( 'label' => __( 'Do not prompt buyer to include a shipping address.', 'gravityformspaypal' ), 'name' => 'disableShipping' ),
-				array( 'label' => __( 'Do not prompt buyer to include a note with payment.', 'gravityformspaypal' ), 'name' => 'disableNote' ),
+				array( 'label' => esc_html__( 'Do not prompt buyer to include a shipping address.', 'gravityformspaypal' ), 'name' => 'disableShipping' ),
+				array( 'label' => esc_html__( 'Do not prompt buyer to include a note with payment.', 'gravityformspaypal' ), 'name' => 'disableNote' ),
 			)
 		);
 
@@ -382,7 +382,7 @@ class GFPayPal extends GFPaymentAddOn {
 			'onclick' => 'ToggleNotifications();',
 			'choices' => array(
 				array(
-					'label' => __( 'Send notifications only when payment is received.', 'gravityformspaypal' ),
+					'label' => esc_html__( "Send notifications for the 'Form is submitted' event only when payment is received.", 'gravityformspaypal' ),
 					'name'  => 'delayNotification',
 				),
 			)
@@ -465,8 +465,8 @@ class GFPayPal extends GFPaymentAddOn {
 			'name'     => 'update_post_action',
 			'choices'  => array(
 				array( 'label' => '' ),
-				array( 'label' => __( 'Mark Post as Draft', 'gravityformspaypal' ), 'value' => 'draft' ),
-				array( 'label' => __( 'Delete Post', 'gravityformspaypal' ), 'value' => 'delete' ),
+				array( 'label' => esc_html__( 'Mark Post as Draft', 'gravityformspaypal' ), 'value' => 'draft' ),
+				array( 'label' => esc_html__( 'Delete Post', 'gravityformspaypal' ), 'value' => 'delete' ),
 
 			),
 			'onChange' => "var checked = jQuery(this).val() ? 'checked' : false; jQuery('#change_post_status').attr('checked', checked);",
@@ -1527,30 +1527,30 @@ class GFPayPal extends GFPaymentAddOn {
 
 		switch ( strtolower( $code ) ) {
 			case 'adjustment_reversal':
-				return __( 'Reversal of an adjustment', 'gravityformspaypal' );
+				return esc_html__( 'Reversal of an adjustment', 'gravityformspaypal' );
 			case 'buyer-complaint':
-				return __( 'A reversal has occurred on this transaction due to a complaint about the transaction from your customer.', 'gravityformspaypal' );
+				return esc_html__( 'A reversal has occurred on this transaction due to a complaint about the transaction from your customer.', 'gravityformspaypal' );
 
 			case 'chargeback':
-				return __( 'A reversal has occurred on this transaction due to a chargeback by your customer.', 'gravityformspaypal' );
+				return esc_html__( 'A reversal has occurred on this transaction due to a chargeback by your customer.', 'gravityformspaypal' );
 
 			case 'chargeback_reimbursement':
-				return __( 'Reimbursement for a chargeback.', 'gravityformspaypal' );
+				return esc_html__( 'Reimbursement for a chargeback.', 'gravityformspaypal' );
 
 			case 'chargeback_settlement':
-				return __( 'Settlement of a chargeback.', 'gravityformspaypal' );
+				return esc_html__( 'Settlement of a chargeback.', 'gravityformspaypal' );
 
 			case 'guarantee':
-				return __( 'A reversal has occurred on this transaction due to your customer triggering a money-back guarantee.', 'gravityformspaypal' );
+				return esc_html__( 'A reversal has occurred on this transaction due to your customer triggering a money-back guarantee.', 'gravityformspaypal' );
 
 			case 'other':
-				return __( 'Non-specified reason.', 'gravityformspaypal' );
+				return esc_html__( 'Non-specified reason.', 'gravityformspaypal' );
 
 			case 'refund':
-				return __( 'A reversal has occurred on this transaction because you have given the customer a refund.', 'gravityformspaypal' );
+				return esc_html__( 'A reversal has occurred on this transaction because you have given the customer a refund.', 'gravityformspaypal' );
 
 			default:
-				return empty( $code ) ? __( 'Reason has not been specified. For more information, contact PayPal Customer Service.', 'gravityformspaypal' ) : $code;
+				return empty( $code ) ? esc_html__( 'Reason has not been specified. For more information, contact PayPal Customer Service.', 'gravityformspaypal' ) : $code;
 		}
 	}
 
@@ -1565,40 +1565,40 @@ class GFPayPal extends GFPaymentAddOn {
 	private function get_pending_reason( $code ) {
 		switch ( strtolower( $code ) ) {
 			case 'address':
-				return __( 'The payment is pending because your customer did not include a confirmed shipping address and your Payment Receiving Preferences is set to allow you to manually accept or deny each of these payments. To change your preference, go to the Preferences section of your Profile.', 'gravityformspaypal' );
+				return esc_html__( 'The payment is pending because your customer did not include a confirmed shipping address and your Payment Receiving Preferences is set to allow you to manually accept or deny each of these payments. To change your preference, go to the Preferences section of your Profile.', 'gravityformspaypal' );
 
 			case 'authorization':
-				return __( 'You set the payment action to Authorization and have not yet captured funds.', 'gravityformspaypal' );
+				return esc_html__( 'You set the payment action to Authorization and have not yet captured funds.', 'gravityformspaypal' );
 
 			case 'echeck':
-				return __( 'The payment is pending because it was made by an eCheck that has not yet cleared.', 'gravityformspaypal' );
+				return esc_html__( 'The payment is pending because it was made by an eCheck that has not yet cleared.', 'gravityformspaypal' );
 
 			case 'intl':
-				return __( 'The payment is pending because you hold a non-U.S. account and do not have a withdrawal mechanism. You must manually accept or deny this payment from your Account Overview.', 'gravityformspaypal' );
+				return esc_html__( 'The payment is pending because you hold a non-U.S. account and do not have a withdrawal mechanism. You must manually accept or deny this payment from your Account Overview.', 'gravityformspaypal' );
 
 			case 'multi-currency':
-				return __( 'You do not have a balance in the currency sent, and you do not have your Payment Receiving Preferences set to automatically convert and accept this payment. You must manually accept or deny this payment.', 'gravityformspaypal' );
+				return esc_html__( 'You do not have a balance in the currency sent, and you do not have your Payment Receiving Preferences set to automatically convert and accept this payment. You must manually accept or deny this payment.', 'gravityformspaypal' );
 
 			case 'order':
-				return __( 'You set the payment action to Order and have not yet captured funds.', 'gravityformspaypal' );
+				return esc_html__( 'You set the payment action to Order and have not yet captured funds.', 'gravityformspaypal' );
 
 			case 'paymentreview':
-				return __( 'The payment is pending while it is being reviewed by PayPal for risk.', 'gravityformspaypal' );
+				return esc_html__( 'The payment is pending while it is being reviewed by PayPal for risk.', 'gravityformspaypal' );
 
 			case 'unilateral':
-				return __( 'The payment is pending because it was made to an email address that is not yet registered or confirmed.', 'gravityformspaypal' );
+				return esc_html__( 'The payment is pending because it was made to an email address that is not yet registered or confirmed.', 'gravityformspaypal' );
 
 			case 'upgrade':
-				return __( 'The payment is pending because it was made via credit card and you must upgrade your account to Business or Premier status in order to receive the funds. upgrade can also mean that you have reached the monthly limit for transactions on your account.', 'gravityformspaypal' );
+				return esc_html__( 'The payment is pending because it was made via credit card and you must upgrade your account to Business or Premier status in order to receive the funds. upgrade can also mean that you have reached the monthly limit for transactions on your account.', 'gravityformspaypal' );
 
 			case 'verify':
-				return __( 'The payment is pending because you are not yet verified. You must verify your account before you can accept this payment.', 'gravityformspaypal' );
+				return esc_html__( 'The payment is pending because you are not yet verified. You must verify your account before you can accept this payment.', 'gravityformspaypal' );
 
 			case 'other':
-				return __( 'Reason has not been specified. For more information, contact PayPal Customer Service.', 'gravityformspaypal' );
+				return esc_html__( 'Reason has not been specified. For more information, contact PayPal Customer Service.', 'gravityformspaypal' );
 
 			default:
-				return empty( $code ) ? __( 'Reason has not been specified. For more information, contact PayPal Customer Service.', 'gravityformspaypal' ) : $code;
+				return empty( $code ) ? esc_html__( 'Reason has not been specified. For more information, contact PayPal Customer Service.', 'gravityformspaypal' ) : $code;
 		}
 	}
 
@@ -1629,6 +1629,32 @@ class GFPayPal extends GFPaymentAddOn {
 
 		//checking if webserver is compatible with PayPal SSL certificate
 		add_action( 'admin_notices', array( $this, 'check_ipn_request' ) );
+	}
+
+	/**
+	 * Add supported notification events.
+	 *
+	 * @param array $form The form currently being processed.
+	 *
+	 * @return array
+	 */
+	public function supported_notification_events( $form ) {
+		if ( ! $this->has_feed( $form['id'] ) ) {
+			return false;
+		}
+
+		return array(
+				'complete_payment'          => esc_html__( 'Payment Completed', 'gravityformspaypal' ),
+				'refund_payment'            => esc_html__( 'Payment Refunded', 'gravityformspaypal' ),
+				'fail_payment'              => esc_html__( 'Payment Failed', 'gravityformspaypal' ),
+				'add_pending_payment'       => esc_html__( 'Payment Pending', 'gravityformspaypal' ),
+				'void_authorization'        => esc_html__( 'Authorization Voided', 'gravityformspaypal' ),
+				'create_subscription'       => esc_html__( 'Subscription Created', 'gravityformspaypal' ),
+				'cancel_subscription'       => esc_html__( 'Subscription Canceled', 'gravityformspaypal' ),
+				'expire_subscription'       => esc_html__( 'Subscription Expired', 'gravityformspaypal' ),
+				'add_subscription_payment'  => esc_html__( 'Subscription Payment Added', 'gravityformspaypal' ),
+				'fail_subscription_payment' => esc_html__( 'Subscription Payment Failed', 'gravityformspaypal' ),
+		);
 	}
 
 	public function maybe_create_menu( $menus ) {
@@ -1667,13 +1693,13 @@ class GFPayPal extends GFPaymentAddOn {
 
 		<div class="wrap about-wrap">
 			<h1><?php _e( 'PayPal Add-On v2.0', 'gravityformspaypal' ) ?></h1>
-			<div class="about-text"><?php _e( 'Thank you for updating! The new version of the Gravity Forms PayPal Standard Add-On makes changes to how you manage your PayPal integration.', 'gravityformspaypal' ) ?></div>
+			<div class="about-text"><?php esc_html_e( 'Thank you for updating! The new version of the Gravity Forms PayPal Standard Add-On makes changes to how you manage your PayPal integration.', 'gravityformspaypal' ) ?></div>
 			<div class="changelog">
 				<hr/>
 				<div class="feature-section col two-col">
 					<div class="col-1">
-						<h3><?php _e( 'Manage PayPal Contextually', 'gravityformspaypal' ) ?></h3>
-						<p><?php _e( 'PayPal Feeds are now accessed via the PayPal sub-menu within the Form Settings for the Form you would like to integrate PayPal with.', 'gravityformspaypal' ) ?></p>
+						<h3><?php esc_html_e( 'Manage PayPal Contextually', 'gravityformspaypal' ) ?></h3>
+						<p><?php esc_html_e( 'PayPal Feeds are now accessed via the PayPal sub-menu within the Form Settings for the Form you would like to integrate PayPal with.', 'gravityformspaypal' ) ?></p>
 					</div>
 					<div class="col-2 last-feature">
 						<img src="http://gravityforms.s3.amazonaws.com/webimages/PayPalNotice/NewPayPal2.png">
@@ -1799,7 +1825,7 @@ class GFPayPal extends GFPaymentAddOn {
 		}
 		//update lead, add a note
 		GFAPI::update_entry( $entry );
-		GFFormsModel::add_note( $entry['id'], $user_id, $user_name, sprintf( __( 'Payment information was manually updated. Status: %s. Amount: %s. Transaction Id: %s. Date: %s', 'gravityformspaypal' ), $entry['payment_status'], GFCommon::to_money( $entry['payment_amount'], $entry['currency'] ), $payment_transaction, $entry['payment_date'] ) );
+		GFFormsModel::add_note( $entry['id'], $user_id, $user_name, sprintf( esc_html__( 'Payment information was manually updated. Status: %s. Amount: %s. Transaction Id: %s. Date: %s', 'gravityformspaypal' ), $entry['payment_status'], GFCommon::to_money( $entry['payment_amount'], $entry['currency'] ), $payment_transaction, $entry['payment_date'] ) );
 	}
 
 	public function fulfill_order( &$entry, $transaction_id, $amount, $feed = null ) {
