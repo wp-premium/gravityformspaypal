@@ -175,7 +175,17 @@ class GFPayPal extends GFPaymentAddOn {
 				'name'    => 'options',
 				'label'   => esc_html__( 'Options', 'gravityformspaypal' ),
 				'type'    => 'options',
-				'tooltip' => '<h6>' . esc_html__( 'Options', 'gravityformspaypal' ) . '</h6>' . esc_html__( 'Turn on or off the available PayPal checkout options.', 'gravityformspaypal' )
+				'tooltip' => '<h6>' . esc_html__( 'Options', 'gravityformspaypal' ) . '</h6>' . esc_html__( 'Turn on or off the available PayPal checkout options.', 'gravityformspaypal' ),
+				'choices' => array(
+					array(
+						'label' => esc_html__( 'Do not prompt buyer to include a shipping address.', 'gravityformspaypal' ),
+						'name'  => 'disableShipping',
+					),
+					array(
+						'label' => esc_html__( 'Do not prompt buyer to include a note with payment.', 'gravityformspaypal' ),
+						'name'  => 'disableNote',
+					),
+				),
 			),
 			array(
 				'name'    => 'notifications',
@@ -323,16 +333,7 @@ class GFPayPal extends GFPaymentAddOn {
 	}
 
 	public function settings_options( $field, $echo = true ) {
-		$checkboxes = array(
-			'name'    => 'options_checkboxes',
-			'type'    => 'checkboxes',
-			'choices' => array(
-				array( 'label' => esc_html__( 'Do not prompt buyer to include a shipping address.', 'gravityformspaypal' ), 'name' => 'disableShipping' ),
-				array( 'label' => esc_html__( 'Do not prompt buyer to include a note with payment.', 'gravityformspaypal' ), 'name' => 'disableNote' ),
-			)
-		);
-
-		$html = $this->settings_checkbox( $checkboxes, false );
+		$html = $this->settings_checkbox( $field, false );
 
 		//--------------------------------------------------------
 		//For backwards compatibility.
@@ -476,14 +477,14 @@ class GFPayPal extends GFPaymentAddOn {
 		return $markup;
 	}
 
+	/**
+	 * Prevent the GFPaymentAddOn version of the options field being added to the feed settings.
+	 * 
+	 * @return bool
+	 */
 	public function option_choices() {
+		
 		return false;
-		$option_choices = array(
-			array( 'label' => __( 'Do not prompt buyer to include a shipping address.', 'gravityformspaypal' ), 'name' => 'disableShipping', 'value' => '' ),
-			array( 'label' => __( 'Do not prompt buyer to include a note with payment.', 'gravityformspaypal' ), 'name' => 'disableNote', 'value' => '' ),
-		);
-
-		return $option_choices;
 	}
 
 	public function save_feed_settings( $feed_id, $form_id, $settings ) {
@@ -1067,6 +1068,14 @@ class GFPayPal extends GFPaymentAddOn {
 
 		$this->log_debug( __METHOD__ . '(): IPN request received. Starting to process => ' . print_r( $_POST, true ) );
 
+		// Valid IPN requests must have a custom field
+		$custom_field = rgpost( 'custom' );
+		if ( empty( $custom_field ) ) {
+			$this->log_error( __METHOD__ . '(): IPN request does not have a custom field, so it was not created by Gravity Forms. Aborting.' );
+
+			return false;
+		}
+
 
 		//------- Send request to paypal and verify it has not been spoofed ---------------------//
 		$is_verified = $this->verify_paypal_ipn();
@@ -1084,7 +1093,7 @@ class GFPayPal extends GFPaymentAddOn {
 
 
 		//------ Getting entry related to this IPN ----------------------------------------------//
-		$entry = $this->get_entry( rgpost( 'custom' ) );
+		$entry = $this->get_entry( $custom_field );
 
 		//Ignore orphan IPN messages (ones without an entry)
 		if ( ! $entry ) {
@@ -1231,10 +1240,13 @@ class GFPayPal extends GFPaymentAddOn {
 		$response = $request->post( $url, array( 'httpversion' => '1.1', 'headers' => $headers, 'sslverify' => $sslverify, 'ssl' => true, 'body' => $req, 'timeout' => 20 ) );
 		$this->log_debug( __METHOD__ . '(): Response: ' . print_r( $response, true ) );
 
-		$body = trim( $response['body'] );
 		if ( is_wp_error( $response ) ) {
 			return $response;
-		} elseif ( ! in_array( $body, array( 'VERIFIED', 'INVALID' ) ) ) {
+		}
+
+		$body = trim( $response['body'] );
+
+		if ( ! in_array( $body, array( 'VERIFIED', 'INVALID' ) ) ) {
 			return new WP_Error( 'IPNVerificationError', 'Unexpected content in the response body.' );
 		}
 
@@ -1413,13 +1425,6 @@ class GFPayPal extends GFPaymentAddOn {
 	}
 
 	public function get_entry( $custom_field ) {
-
-		//Valid IPN requests must have a custom field
-		if ( empty( $custom_field ) ) {
-			$this->log_error( __METHOD__ . '(): IPN request does not have a custom field, so it was not created by Gravity Forms. Aborting.' );
-
-			return false;
-		}
 
 		//Getting entry associated with this IPN message (entry id is sent in the 'custom' field)
 		list( $entry_id, $hash ) = explode( '|', $custom_field );
@@ -1843,7 +1848,7 @@ class GFPayPal extends GFPaymentAddOn {
 
 		if ( rgars( $feed, 'meta/delayNotification' ) ) {
 			//sending delayed notifications
-			$notifications = rgars( $feed, 'meta/selectedNotifications' );
+			$notifications = $this->get_notifications_to_send( $form, $feed );
 			GFCommon::send_notifications( $notifications, $form, $entry, true, 'form_submission' );
 		}
 
@@ -1852,6 +1857,32 @@ class GFPayPal extends GFPaymentAddOn {
 			$this->log_debug( __METHOD__ . '(): Executing functions hooked to gform_paypal_fulfillment.' );
 		}
 
+	}
+
+	/**
+	 * Retrieve the IDs of the notifications to be sent.
+	 *
+	 * @param array $form The form which created the entry being processed.
+	 * @param array $feed The feed which processed the entry.
+	 *
+	 * @return array
+	 */
+	public function get_notifications_to_send( $form, $feed ) {
+		$notifications_to_send  = array();
+		$selected_notifications = rgars( $feed, 'meta/selectedNotifications' );
+
+		if ( is_array( $selected_notifications ) ) {
+			// Make sure that the notifications being sent belong to the form submission event, just in case the notification event was changed after the feed was configured.
+			foreach ( $form['notifications'] as $notification ) {
+				if ( rgar( $notification, 'event' ) != 'form_submission' || ! in_array( $notification['id'], $selected_notifications ) ) {
+					continue;
+				}
+
+				$notifications_to_send[] = $notification['id'];
+			}
+		}
+
+		return $notifications_to_send;
 	}
 
 	private function is_valid_initial_payment_amount( $entry_id, $amount_paid ) {
@@ -1889,11 +1920,30 @@ class GFPayPal extends GFPaymentAddOn {
 	 * @return bool
 	 */
 	public function payment_details_editing_disabled( $entry, $action = 'edit' ) {
+		if ( ! $this->is_payment_gateway( $entry['id'] ) ) {
+			// Entry was not processed by this add-on, don't allow editing.
+			return true;
+		}
+
 		$payment_status = rgar( $entry, 'payment_status' );
-		$form_action    = strtolower( rgpost( 'save' ) );
+		if ( $payment_status == 'Approved' || $payment_status == 'Paid' || rgar( $entry, 'transaction_type' ) == 2 ) {
+			// Editing not allowed for this entries transaction type or payment status.
+			return true;
+		}
 
-		return ! $this->is_payment_gateway( $entry['id'] ) || $form_action <> $action || $payment_status == 'Approved' || $payment_status == 'Paid' || rgar( $entry, 'transaction_type' ) == 2;
+		if ( $action == 'edit' && rgpost( 'screen_mode' ) == 'edit' ) {
+			// Editing is allowed for this entry.
+			return false;
+		}
 
+		if ( $action == 'update' && rgpost( 'screen_mode' ) == 'view' && rgpost( 'action' ) == 'update' ) {
+			// Updating the payment details for this entry is allowed.
+			return false;
+		}
+
+		// In all other cases editing is not allowed.
+
+		return true;
 	}
 
 	/**

@@ -1,9 +1,9 @@
 # Copyright 2009-2016 Rocketgenius, Inc.
 msgid ""
 msgstr ""
-"Project-Id-Version: Gravity Forms PayPal Standard Add-On 2.6\n"
+"Project-Id-Version: Gravity Forms PayPal Standard Add-On 2.7\n"
 "Report-Msgid-Bugs-To: http://www.gravtiyhelp.com\n"
-"POT-Creation-Date: 2016-01-11 19:04:44+00:00\n"
+"POT-Creation-Date: 2016-08-10 18:16:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -137,11 +137,19 @@ msgstr ""
 msgid "Turn on or off the available PayPal checkout options."
 msgstr ""
 
-#: class-gf-paypal.php:182 class-gf-paypal.php:184
+#: class-gf-paypal.php:181
+msgid "Do not prompt buyer to include a shipping address."
+msgstr ""
+
+#: class-gf-paypal.php:185
+msgid "Do not prompt buyer to include a note with payment."
+msgstr ""
+
+#: class-gf-paypal.php:192 class-gf-paypal.php:194
 msgid "Notifications"
 msgstr ""
 
-#: class-gf-paypal.php:184
+#: class-gf-paypal.php:194
 msgid ""
 "Enable this option if you would like to only send out this form's "
 "notifications for the 'Form is submitted' event after payment has been "
@@ -150,171 +158,163 @@ msgid ""
 "for other events will not be affected by this option."
 msgstr ""
 
-#: class-gf-paypal.php:193 class-gf-paypal.php:195
+#: class-gf-paypal.php:203 class-gf-paypal.php:205
 msgid "Posts"
 msgstr ""
 
-#: class-gf-paypal.php:195
+#: class-gf-paypal.php:205
 msgid ""
 "Enable this option if you would like to only create the post after payment "
 "has been received."
 msgstr ""
 
-#: class-gf-paypal.php:197
+#: class-gf-paypal.php:207
 msgid "Create post only when payment is received."
 msgstr ""
 
-#: class-gf-paypal.php:203
+#: class-gf-paypal.php:213
 msgid "Change post status when subscription is canceled."
 msgstr ""
 
-#: class-gf-paypal.php:238
+#: class-gf-paypal.php:248
 msgid "Last Name"
 msgstr ""
 
-#: class-gf-paypal.php:241
+#: class-gf-paypal.php:251
 msgid "First Name"
 msgstr ""
 
-#: class-gf-paypal.php:252 class-gf-paypal.php:255
+#: class-gf-paypal.php:262 class-gf-paypal.php:265
 msgid "Trial Period"
 msgstr ""
 
-#: class-gf-paypal.php:255
+#: class-gf-paypal.php:265
 msgid "Select the trial period length."
 msgstr ""
 
-#: class-gf-paypal.php:263 class-gf-paypal.php:267
+#: class-gf-paypal.php:273 class-gf-paypal.php:277
 msgid "Recurring Retry"
 msgstr ""
 
-#: class-gf-paypal.php:266
+#: class-gf-paypal.php:276
 msgid "Try to bill again after failed attempt."
 msgstr ""
 
-#: class-gf-paypal.php:267
+#: class-gf-paypal.php:277
 msgid "Turn on or off whether to try to bill again after failed attempt."
 msgstr ""
 
-#: class-gf-paypal.php:285
+#: class-gf-paypal.php:295
 msgid "day(s)"
 msgstr ""
 
-#: class-gf-paypal.php:286
+#: class-gf-paypal.php:296
 msgid "week(s)"
 msgstr ""
 
-#: class-gf-paypal.php:287
+#: class-gf-paypal.php:297
 msgid "month(s)"
 msgstr ""
 
-#: class-gf-paypal.php:288
+#: class-gf-paypal.php:298
 msgid "year(s)"
 msgstr ""
 
-#: class-gf-paypal.php:295
+#: class-gf-paypal.php:305
 msgid "PayPal Field"
 msgstr ""
 
-#: class-gf-paypal.php:330 class-gf-paypal.php:482
-msgid "Do not prompt buyer to include a shipping address."
-msgstr ""
-
-#: class-gf-paypal.php:331 class-gf-paypal.php:483
-msgid "Do not prompt buyer to include a note with payment."
-msgstr ""
-
-#: class-gf-paypal.php:385
+#: class-gf-paypal.php:386
 msgid ""
 "Send notifications for the 'Form is submitted' event only when payment is "
 "received."
 msgstr ""
 
-#: class-gf-paypal.php:468
+#: class-gf-paypal.php:469
 msgid "Mark Post as Draft"
 msgstr ""
 
-#: class-gf-paypal.php:469
+#: class-gf-paypal.php:470
 msgid "Delete Post"
 msgstr ""
 
-#: class-gf-paypal.php:590
+#: class-gf-paypal.php:591
 msgid "Click here to continue"
 msgstr ""
 
-#: class-gf-paypal.php:1274
+#: class-gf-paypal.php:1286
 msgid ""
 "Payment amount (%s) does not match subscription amount. Subscription will "
 "not be activated. Transaction Id: %s"
 msgstr ""
 
-#: class-gf-paypal.php:1340
+#: class-gf-paypal.php:1352
 msgid ""
 "Payment amount (%s) does not match product price. Entry will not be marked "
 "as Approved. Transaction Id: %s"
 msgstr ""
 
-#: class-gf-paypal.php:1353
+#: class-gf-paypal.php:1365
 msgid "Payment has been reversed. Transaction Id: %s. Reason: %s"
 msgstr ""
 
-#: class-gf-paypal.php:1361
+#: class-gf-paypal.php:1373
 msgid ""
 "Payment reversal has been canceled and the funds have been transferred to "
 "your account. Transaction Id: %s"
 msgstr ""
 
-#: class-gf-paypal.php:1374
+#: class-gf-paypal.php:1386
 msgid "Payment is pending. Amount: %s. Transaction Id: %s. Reason: %s"
 msgstr ""
 
-#: class-gf-paypal.php:1530
+#: class-gf-paypal.php:1535
 msgid "Reversal of an adjustment"
 msgstr ""
 
-#: class-gf-paypal.php:1532
+#: class-gf-paypal.php:1537
 msgid ""
 "A reversal has occurred on this transaction due to a complaint about the "
 "transaction from your customer."
 msgstr ""
 
-#: class-gf-paypal.php:1535
+#: class-gf-paypal.php:1540
 msgid ""
 "A reversal has occurred on this transaction due to a chargeback by your "
 "customer."
 msgstr ""
 
-#: class-gf-paypal.php:1538
+#: class-gf-paypal.php:1543
 msgid "Reimbursement for a chargeback."
 msgstr ""
 
-#: class-gf-paypal.php:1541
+#: class-gf-paypal.php:1546
 msgid "Settlement of a chargeback."
 msgstr ""
 
-#: class-gf-paypal.php:1544
+#: class-gf-paypal.php:1549
 msgid ""
 "A reversal has occurred on this transaction due to your customer triggering "
 "a money-back guarantee."
 msgstr ""
 
-#: class-gf-paypal.php:1547
+#: class-gf-paypal.php:1552
 msgid "Non-specified reason."
 msgstr ""
 
-#: class-gf-paypal.php:1550
+#: class-gf-paypal.php:1555
 msgid ""
 "A reversal has occurred on this transaction because you have given the "
 "customer a refund."
 msgstr ""
 
-#: class-gf-paypal.php:1553 class-gf-paypal.php:1598 class-gf-paypal.php:1601
+#: class-gf-paypal.php:1558 class-gf-paypal.php:1603 class-gf-paypal.php:1606
 msgid ""
 "Reason has not been specified. For more information, contact PayPal "
 "Customer Service."
 msgstr ""
 
-#: class-gf-paypal.php:1568
+#: class-gf-paypal.php:1573
 msgid ""
 "The payment is pending because your customer did not include a confirmed "
 "shipping address and your Payment Receiving Preferences is set to allow you "
@@ -322,45 +322,45 @@ msgid ""
 "preference, go to the Preferences section of your Profile."
 msgstr ""
 
-#: class-gf-paypal.php:1571
+#: class-gf-paypal.php:1576
 msgid "You set the payment action to Authorization and have not yet captured funds."
 msgstr ""
 
-#: class-gf-paypal.php:1574
+#: class-gf-paypal.php:1579
 msgid ""
 "The payment is pending because it was made by an eCheck that has not yet "
 "cleared."
 msgstr ""
 
-#: class-gf-paypal.php:1577
+#: class-gf-paypal.php:1582
 msgid ""
 "The payment is pending because you hold a non-U.S. account and do not have "
 "a withdrawal mechanism. You must manually accept or deny this payment from "
 "your Account Overview."
 msgstr ""
 
-#: class-gf-paypal.php:1580
+#: class-gf-paypal.php:1585
 msgid ""
 "You do not have a balance in the currency sent, and you do not have your "
 "Payment Receiving Preferences set to automatically convert and accept this "
 "payment. You must manually accept or deny this payment."
 msgstr ""
 
-#: class-gf-paypal.php:1583
+#: class-gf-paypal.php:1588
 msgid "You set the payment action to Order and have not yet captured funds."
 msgstr ""
 
-#: class-gf-paypal.php:1586
+#: class-gf-paypal.php:1591
 msgid "The payment is pending while it is being reviewed by PayPal for risk."
 msgstr ""
 
-#: class-gf-paypal.php:1589
+#: class-gf-paypal.php:1594
 msgid ""
 "The payment is pending because it was made to an email address that is not "
 "yet registered or confirmed."
 msgstr ""
 
-#: class-gf-paypal.php:1592
+#: class-gf-paypal.php:1597
 msgid ""
 "The payment is pending because it was made via credit card and you must "
 "upgrade your account to Business or Premier status in order to receive the "
@@ -368,81 +368,81 @@ msgid ""
 "transactions on your account."
 msgstr ""
 
-#: class-gf-paypal.php:1595
+#: class-gf-paypal.php:1600
 msgid ""
 "The payment is pending because you are not yet verified. You must verify "
 "your account before you can accept this payment."
 msgstr ""
 
-#: class-gf-paypal.php:1647
+#: class-gf-paypal.php:1652
 msgid "Payment Completed"
 msgstr ""
 
-#: class-gf-paypal.php:1648
+#: class-gf-paypal.php:1653
 msgid "Payment Refunded"
 msgstr ""
 
-#: class-gf-paypal.php:1649
+#: class-gf-paypal.php:1654
 msgid "Payment Failed"
 msgstr ""
 
-#: class-gf-paypal.php:1650
+#: class-gf-paypal.php:1655
 msgid "Payment Pending"
 msgstr ""
 
-#: class-gf-paypal.php:1651
+#: class-gf-paypal.php:1656
 msgid "Authorization Voided"
 msgstr ""
 
-#: class-gf-paypal.php:1652
+#: class-gf-paypal.php:1657
 msgid "Subscription Created"
 msgstr ""
 
-#: class-gf-paypal.php:1653
+#: class-gf-paypal.php:1658
 msgid "Subscription Canceled"
 msgstr ""
 
-#: class-gf-paypal.php:1654
+#: class-gf-paypal.php:1659
 msgid "Subscription Expired"
 msgstr ""
 
-#: class-gf-paypal.php:1655
+#: class-gf-paypal.php:1660
 msgid "Subscription Payment Added"
 msgstr ""
 
-#: class-gf-paypal.php:1656
+#: class-gf-paypal.php:1661
 msgid "Subscription Payment Failed"
 msgstr ""
 
-#: class-gf-paypal.php:1695
+#: class-gf-paypal.php:1700
 msgid "PayPal Add-On v2.0"
 msgstr ""
 
-#: class-gf-paypal.php:1696
+#: class-gf-paypal.php:1701
 msgid ""
 "Thank you for updating! The new version of the Gravity Forms PayPal "
 "Standard Add-On makes changes to how you manage your PayPal integration."
 msgstr ""
 
-#: class-gf-paypal.php:1701
+#: class-gf-paypal.php:1706
 msgid "Manage PayPal Contextually"
 msgstr ""
 
-#: class-gf-paypal.php:1702
+#: class-gf-paypal.php:1707
 msgid ""
 "PayPal Feeds are now accessed via the PayPal sub-menu within the Form "
 "Settings for the Form you would like to integrate PayPal with."
 msgstr ""
 
-#: class-gf-paypal.php:1712
+#: class-gf-paypal.php:1717
 msgid "I understand this change, dismiss this message!"
 msgstr ""
 
-#: class-gf-paypal.php:1713
+#: class-gf-paypal.php:1718
 msgid "Please wait..."
 msgstr ""
 
-#: class-gf-paypal.php:1828
+#: class-gf-paypal.php:1833
 msgid ""
 "Payment information was manually updated. Status: %s. Amount: %s. "
 "Transaction Id: %s. Date: %s"
