@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------
+Version 2.7
+    - Updated options settings so the choices are available to the gform_addon_feed_settings_fields filter in GF2.0.
+    - Updated IPN processing to abort earlier if the IPN does not contain the custom field.
+    - Fixed an issue which could cause notifications from other events to be sent when processing the delayed form submission notifications.
+    - Fixed an issue which could prevent the payment details being edited on the entry detail page for sites where Gravity Forms is using a non-English translation.
+    - Fixed a fatal error which could occur if the IPN verification response contained a WP_Error object.
+
+---------------------------------------------------------------------
 Version 2.6
     - Added support for sending notifications on payment/subscription events. Configured on the edit notification page using the 'Event' setting.
     - Added the gform_paypal_sslverify filter to allow sslverify be modified before sending requests.
