@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------
+Version 2.8
+    - Added Chinese translation. Credit: Edi Michael.
+	- Updated strings for translations.
+	- Updated string for configuring settings to be consistent with other add-ons.
+	- Deprecated the delayed Notifications setting (Send notifications for the 'Form is submitted' event only when payment is received) in favor of the "Payment Received" notification event.
+	- Fixed typo causing PayPal to not load properly.
+    - Fixed an issue with the delay notification feature where a notification could continue to be delayed even when it is no longer assigned to the form submission event.
+    - Fixed an issue where a note would be added to the entry indicating payment details where updated when editing the entry even though the payment details had not changed.
+
+---------------------------------------------------------------------
 Version 2.7
     - Updated options settings so the choices are available to the gform_addon_feed_settings_fields filter in GF2.0.
     - Updated IPN processing to abort earlier if the IPN does not contain the custom field.
