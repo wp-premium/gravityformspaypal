@@ -692,7 +692,8 @@ class GFPayPal extends GFPaymentAddOn {
 					if ( is_array( $options ) ) {
 						$option_index = 1;
 						foreach ( $options as $option ) {
-							$option_label = urlencode( $option['field_label'] );
+							// Trim option label to prevent PayPal displaying an error instead of the cart.
+							$option_label = urlencode( substr( $option['field_label'], 0, 64 ) );
 							$option_name  = urlencode( $option['option_name'] );
 							$query_string .= "&on{$option_index}_{$product_index}={$option_label}&os{$option_index}_{$product_index}={$option_name}";
 							$option_index ++;
@@ -2006,11 +2007,31 @@ class GFPayPal extends GFPaymentAddOn {
 		delete_option( 'gform_paypal_sslverify' );
 	}
 
+	public static function get_entry_table_name() {
+		return version_compare( self::get_gravityforms_db_version(), '2.3-dev-1', '<' ) ? GFFormsModel::get_lead_table_name() : GFFormsModel::get_entry_table_name();
+ 	}
+
+	public static function get_entry_meta_table_name() {
+		return version_compare( self::get_gravityforms_db_version(), '2.3-dev-1', '<' ) ? GFFormsModel::get_lead_meta_table_name() : GFFormsModel::get_entry_meta_table_name();
+ 	}
+
+	public static function get_gravityforms_db_version() {
+
+		if ( method_exists( 'GFFormsModel', 'get_database_version' ) ) {
+			$db_version = GFFormsModel::get_database_version();
+		} else {
+			$db_version = GFForms::$version;
+		}
+
+		return $db_version;
+	}
+
 	//------ FOR BACKWARDS COMPATIBILITY ----------------------//
 
 	public function update_feed_id( $old_feed_id, $new_feed_id ) {
 		global $wpdb;
-		$sql = $wpdb->prepare( "UPDATE {$wpdb->prefix}rg_lead_meta SET meta_value=%s WHERE meta_key='paypal_feed_id' AND meta_value=%s", $new_feed_id, $old_feed_id );
+		$entry_meta_table = self::get_entry_meta_table_name();
+		$sql = $wpdb->prepare( "UPDATE {$entry_meta_table} SET meta_value=%s WHERE meta_key='paypal_feed_id' AND meta_value=%s", $new_feed_id, $old_feed_id );
 		$wpdb->query( $sql );
 	}
 
@@ -2034,18 +2055,22 @@ class GFPayPal extends GFPaymentAddOn {
 
 	public function update_payment_gateway() {
 		global $wpdb;
-		$sql = $wpdb->prepare( "UPDATE {$wpdb->prefix}rg_lead_meta SET meta_value=%s WHERE meta_key='payment_gateway' AND meta_value='paypal'", $this->_slug );
+		$entry_meta_table = self::get_entry_meta_table_name();
+		$sql = $wpdb->prepare( "UPDATE {$entry_meta_table} SET meta_value=%s WHERE meta_key='payment_gateway' AND meta_value='paypal'", $this->_slug );
 		$wpdb->query( $sql );
 	}
 
 	public function update_lead() {
 		global $wpdb;
+		$entry_table = self::get_entry_table_name();
+		$entry_meta_table = self::get_entry_meta_table_name();
+		$entry_id_column = version_compare( self::get_gravityforms_db_version(), '2.3-dev-1', '<' ) ? 'lead_id' : 'entry_id';
 		$sql = $wpdb->prepare(
-			"UPDATE {$wpdb->prefix}rg_lead
+			"UPDATE {$entry_table}
 			 SET payment_status='Paid', payment_method='PayPal'
 		     WHERE payment_status='Approved'
 		     		AND ID IN (
-					  	SELECT lead_id FROM {$wpdb->prefix}rg_lead_meta WHERE meta_key='payment_gateway' AND meta_value=%s
+					  	SELECT {$entry_id_column} FROM {$entry_meta_table} WHERE meta_key='payment_gateway' AND meta_value=%s
 				   	)",
 			$this->_slug);
 
