@@ -1,11 +1,12 @@
 <?php
 /*
 Plugin Name: Gravity Forms PayPal Standard Add-On
-Plugin URI: http://www.gravityforms.com
+Plugin URI: https://www.gravityforms.com
 Description: Integrates Gravity Forms with PayPal Payments Standard, enabling end users to purchase goods and services through Gravity Forms.
-Version: 2.9
+Version: 3.0
 Author: rocketgenius
-Author URI: http://www.rocketgenius.com
+Author URI: https://www.rocketgenius.com
+License: GPL-2.0+
 Text Domain: gravityformspaypal
 Domain Path: /languages
 
@@ -28,7 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
 
-define( 'GF_PAYPAL_VERSION', '2.9' );
+define( 'GF_PAYPAL_VERSION', '3.0' );
 
 add_action( 'gform_loaded', array( 'GF_PayPal_Bootstrap', 'load' ), 5 );
 
