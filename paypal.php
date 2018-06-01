@@ -3,7 +3,7 @@
 Plugin Name: Gravity Forms PayPal Standard Add-On
 Plugin URI: https://www.gravityforms.com
 Description: Integrates Gravity Forms with PayPal Payments Standard, enabling end users to purchase goods and services through Gravity Forms.
-Version: 3.0
+Version: 3.1
 Author: rocketgenius
 Author URI: https://www.rocketgenius.com
 License: GPL-2.0+
@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
 
-define( 'GF_PAYPAL_VERSION', '3.0' );
+define( 'GF_PAYPAL_VERSION', '3.1' );
 
 add_action( 'gform_loaded', array( 'GF_PayPal_Bootstrap', 'load' ), 5 );
 

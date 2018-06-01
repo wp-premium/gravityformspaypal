@@ -1630,6 +1630,10 @@ class GFPayPal extends GFPaymentAddOn {
 
 		//checking if webserver is compatible with PayPal SSL certificate
 		add_action( 'admin_notices', array( $this, 'check_ipn_request' ) );
+
+		if ( ! self::is_tls_1_2() ) {
+			GFCommon::add_error_message( '<strong>WARNING: You may no longer be able to accept PayPal payments after June 2018! </strong><br/>It looks like your server does not support TLS 1.2. As of June 2018, PayPal is dropping support for TLS 1.1 and your payments may no longer function properly. It is critically important that you upgrade your server to support TLS 1.2 as soon as possible. For more information, contact your web hosting provider and ask them to support TLS 1.2. More information is available in <a href=“https://www.paypal.com/au/webapps/mpp/tls-http-upgrade” target=“_blank”>PayPal’s TLS 1.2 and HTTP/1.1 Upgrade Documentation</a>.' );
+		}
 	}
 
 	/**
@@ -2013,6 +2017,11 @@ class GFPayPal extends GFPaymentAddOn {
 		}
 
 		return $db_version;
+	}
+
+	public static function is_tls_1_2() {
+		$response = wp_remote_get( 'https://tlstest.paypal.com/' );
+		return ! is_wp_error( $response ) && $response['body'] == 'PayPal_Connection_OK' ? true : false;
 	}
 
 	//------ FOR BACKWARDS COMPATIBILITY ----------------------//
