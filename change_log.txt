@@ -1,3 +1,6 @@
+# 3.1 | 2018-05-17
+   - Added detection for servers with an outdated TLS protocol and displays a warning message when needed.
+
 # 3.0 | 2018-05-09
    - Added image_url PayPal variable which allows users to enter the URL of the 150x50-pixel image displayed as the logo in the upper left corner of the PayPal checkout pages.
    - Added GPL to plugin header.
