@@ -1,5 +1,7 @@
 <?php
 
+defined( 'ABSPATH' ) || die();
+
 add_action( 'wp', array( 'GFPayPal', 'maybe_thankyou_page' ), 5 );
 
 GFForms::include_payment_addon_framework();
@@ -1603,16 +1605,6 @@ class GFPayPal extends GFPaymentAddOn {
 		}
 	}
 
-	//------- AJAX FUNCTIONS ------------------//
-
-	public function init_ajax() {
-
-		parent::init_ajax();
-
-		add_action( 'wp_ajax_gf_dismiss_paypal_menu', array( $this, 'ajax_dismiss_menu' ) );
-
-	}
-
 	//------- ADMIN FUNCTIONS/HOOKS -----------//
 
 	public function init_admin() {
@@ -1626,14 +1618,9 @@ class GFPayPal extends GFPaymentAddOn {
 		add_action( 'gform_payment_amount', array( $this, 'admin_edit_payment_amount' ), 3, 3 );
 		add_action( 'gform_after_update_entry', array( $this, 'admin_update_payment' ), 4, 2 );
 
-		add_filter( 'gform_addon_navigation', array( $this, 'maybe_create_menu' ) );
-
 		//checking if webserver is compatible with PayPal SSL certificate
 		add_action( 'admin_notices', array( $this, 'check_ipn_request' ) );
 
-		if ( ! self::is_tls_1_2() ) {
-			GFCommon::add_error_message( '<strong>WARNING: You may no longer be able to accept PayPal payments after June 2018! </strong><br/>It looks like your server does not support TLS 1.2. As of June 2018, PayPal is dropping support for TLS 1.1 and your payments may no longer function properly. It is critically important that you upgrade your server to support TLS 1.2 as soon as possible. For more information, contact your web hosting provider and ask them to support TLS 1.2. More information is available in <a href=“https://www.paypal.com/au/webapps/mpp/tls-http-upgrade” target=“_blank”>PayPal’s TLS 1.2 and HTTP/1.1 Upgrade Documentation</a>.' );
-		}
 	}
 
 	/**
@@ -1660,67 +1647,6 @@ class GFPayPal extends GFPaymentAddOn {
 				'add_subscription_payment'  => esc_html__( 'Subscription Payment Added', 'gravityformspaypal' ),
 				'fail_subscription_payment' => esc_html__( 'Subscription Payment Failed', 'gravityformspaypal' ),
 		);
-	}
-
-	public function maybe_create_menu( $menus ) {
-		$current_user = wp_get_current_user();
-		$dismiss_paypal_menu = get_metadata( 'user', $current_user->ID, 'dismiss_paypal_menu', true );
-		if ( $dismiss_paypal_menu != '1' ) {
-			$menus[] = array( 'name' => $this->_slug, 'label' => $this->get_short_title(), 'callback' => array( $this, 'temporary_plugin_page' ), 'permission' => $this->_capabilities_form_settings );
-		}
-
-		return $menus;
-	}
-
-	public function ajax_dismiss_menu() {
-
-		$current_user = wp_get_current_user();
-		update_metadata( 'user', $current_user->ID, 'dismiss_paypal_menu', '1' );
-	}
-
-	public function temporary_plugin_page() {
-		$current_user = wp_get_current_user();
-		?>
-		<script type="text/javascript">
-			function dismissMenu(){
-				jQuery('#gf_spinner').show();
-				jQuery.post(ajaxurl, {
-						action : "gf_dismiss_paypal_menu"
-					},
-					function (response) {
-						document.location.href='?page=gf_edit_forms';
-						jQuery('#gf_spinner').hide();
-					}
-				);
-
-			}
-		</script>
-
-		<div class="wrap about-wrap">
-			<h1><?php _e( 'PayPal Add-On v2.0', 'gravityformspaypal' ) ?></h1>
-			<div class="about-text"><?php esc_html_e( 'Thank you for updating! The new version of the Gravity Forms PayPal Standard Add-On makes changes to how you manage your PayPal integration.', 'gravityformspaypal' ) ?></div>
-			<div class="changelog">
-				<hr/>
-				<div class="feature-section col two-col">
-					<div class="col-1">
-						<h3><?php esc_html_e( 'Manage PayPal Contextually', 'gravityformspaypal' ) ?></h3>
-						<p><?php esc_html_e( 'PayPal Feeds are now accessed via the PayPal sub-menu within the Form Settings for the Form you would like to integrate PayPal with.', 'gravityformspaypal' ) ?></p>
-					</div>
-					<div class="col-2 last-feature">
-						<img src="http://gravityforms.s3.amazonaws.com/webimages/PayPalNotice/NewPayPal2.png">
-					</div>
-				</div>
-
-				<hr/>
-
-				<form method="post" id="dismiss_menu_form" style="margin-top: 20px;">
-					<input type="checkbox" name="dismiss_paypal_menu" value="1" onclick="dismissMenu();"> <label><?php _e( 'I understand this change, dismiss this message!', 'gravityformspaypal' ) ?></label>
-					<img id="gf_spinner" src="<?php echo GFCommon::get_base_url() . '/images/spinner.gif'?>" alt="<?php _e( 'Please wait...', 'gravityformspaypal' ) ?>" style="display:none;"/>
-				</form>
-
-			</div>
-		</div>
-		<?php
 	}
 
 	public function admin_edit_payment_status( $payment_status, $form, $entry ) {
@@ -1993,6 +1919,12 @@ class GFPayPal extends GFPaymentAddOn {
 			$this->update_lead();			
 			
 		}
+
+		// Remove TLS 1.2 warning.
+		if ( ! empty( $previous_version ) && version_compare( $previous_version, '3.2', '<' ) ) {
+			delete_transient( 'gravityformspaypal_tlstest_response' );
+		}
+
 	}
 
 	public function uninstall(){
@@ -2017,11 +1949,6 @@ class GFPayPal extends GFPaymentAddOn {
 		}
 
 		return $db_version;
-	}
-
-	public static function is_tls_1_2() {
-		$response = wp_remote_get( 'https://tlstest.paypal.com/' );
-		return ! is_wp_error( $response ) && $response['body'] == 'PayPal_Connection_OK' ? true : false;
 	}
 
 	//------ FOR BACKWARDS COMPATIBILITY ----------------------//
