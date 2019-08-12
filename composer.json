@@ -1,0 +1,9 @@
+{
+    "name": "wp-premium/gravityformspaypal",
+    "type": "wordpress-plugin",
+    "autoload": {
+        "classmap": [
+            "."
+        ]
+    }
+}
