@@ -1,0 +1,7 @@
+#gf_paypal_custom_settings label.left_header {
+    margin-left:-200px
+}
+
+select[name="_gform_setting_trial_product"] + .gform-settings-input__container {
+    display: inline-flex;
+}
